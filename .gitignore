@@ -1,0 +1,32 @@
+# macOS
+.DS_Store
+
+# Local environment files and secrets
+.env
+.env.*
+!.env.example
+secrets/
+*.pem
+*.key
+
+# Logs
+logs/
+*.log
+
+# Local datasets and original imports
+data/raw/
+data/local/
+
+# Generated briefings
+outputs/
+
+# Local database storage and backups
+mysql-data/
+backups/
+*.sql.gz
+
+# Temporary files
+tmp/
+*.tmp
+*.swp
+*~
