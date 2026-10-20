@@ -10,7 +10,7 @@ This is the first project in **Project Stillwater**, a collection of hands-on pr
 
 ## Project Goal
 
-Build a working prototype in approximately two weeks that:
+Build a terminal-based working prototype in approximately two weeks / 20–30 focused hours that:
 
 - Imports multiple seasons of historical football data from one suitable source.
 - Stores normalized data and source references in MySQL.
@@ -19,6 +19,8 @@ Build a working prototype in approximately two weeks that:
 - Demonstrates permitted access, blocked access, and handling of untrusted instructions.
 
 Exact dataset coverage will depend on source availability, permitted use, and implementation time.
+
+Version one uses one historical data source and a fixed sequential workflow. Live ingestion, a dashboard, S3, Athena, RDS, arbitrary SQL or shell tools, and infrastructure-changing agents are deferred. Reduce data coverage before expanding scope.
 
 ## Planned Architecture
 
@@ -29,6 +31,7 @@ flowchart TD
     Import --> DB[MySQL]
     User[Terminal request] --> Orchestrator[Workflow orchestrator]
     Orchestrator --> Research[Research agent]
+    Orchestrator --> API[External model API]
     Research --> MCP[Restricted MCP tools]
     MCP --> DB
     Research --> Writer[Writer agent]
@@ -37,25 +40,32 @@ flowchart TD
     MCP --> Logs
 ```
 
-The initial application and database will run on an EC2 sandbox, accessed through Tailscale. The orchestrator will invoke an external model API and run the research and writing stages sequentially.
+The initial application and MySQL database will run locally on the developer’s Mac. Hosting can be revisited as needed; a friend’s Linux VM accessed through Tailscale and SSH is a possible future option. The orchestrator will invoke an external model API and run the research and writing stages sequentially.
+
+The research agent retrieves structured evidence through `list_games` and `get_game_data`. The writer receives that evidence and its source references without database or retrieval-tool access. The orchestrator controls the handoff, timeouts, and usage limits.
 
 ## Data Plan
 
-Start with schedules, game results, and team game statistics. Add player statistics if time and source coverage allow.
+Start with one season of schedules, game results, and team game statistics to validate the import, then expand historical coverage. Add player statistics if time and source coverage allow.
 
 Imports will preserve original source files and track retrieval time, record counts, and failures. Repeat imports should update existing records without creating duplicates.
+
+Keep original imports in a private local directory excluded from Git. Link normalized records to their source and import history, and preserve missing values as missing rather than treating them as zero.
 
 ## Security Approach
 
 - Separate database identities for administration, ingestion, and retrieval.
 - Give the MCP database identity read-only access to approved tables or views.
-- Keep database credentials out of agent inputs and outputs.
+- Keep database credentials out of agent inputs and outputs; keep import and administrator credentials unavailable to the agent runtime.
 - Expose bounded, parameterized retrieval tools rather than arbitrary SQL.
 - Keep MySQL accessible only within the host or private container network.
 - Exclude credentials, private configuration, and sensitive logs from Git.
 - Treat retrieved notes as untrusted data.
+- Record sanitized audit events, errors, timing, and model usage without exposing secrets in prompts or logs.
 
-A controlled prompt-injection experiment will test agent behavior. Separate database checks will verify that unauthorized reads and writes are denied.
+A controlled prompt-injection experiment in a harmless game note will test agent behavior. Separate database checks will verify that authorized reads succeed, private-table reads fail, and dataset writes fail under the MCP identity. Missing-data and repeated-import checks will verify application behavior and data integrity.
+
+Database identities enforce database privileges, but services on one machine still share host-level risks. Separate operating-system users or containers may improve isolation; the implementation will document the limits of the chosen setup.
 
 ## Two-Week Milestones
 
@@ -75,12 +85,19 @@ A controlled prompt-injection experiment will test agent behavior. Separate data
 - Factual claims can be traced to source records.
 - Missing information is reported rather than invented.
 - Authorized reads succeed; unauthorized reads and writes fail.
-- Setup instructions and a sample briefing are documented.
+- Sanitized logs make tool calls and workflow outcomes inspectable.
+- Setup instructions, a sample sourced briefing, security-check results, and isolation limitations are documented.
 
 ## Development Setup
 
+See the [project outline](docs/project-outline.md) for the detailed plan, security boundaries, learning approach, and next three implementation steps.
+
 Setup instructions will be added as implementation progresses. The programming language, model provider, and football data source have not yet been selected.
+
+The next steps are to establish the local development environment, validate a repeatable one-season import, and verify the restricted MCP tools before connecting the agents.
 
 ## Learning Notes
 
 This repository will document architectural decisions, security-check results, and lessons learned. AI coding tools will assist development; changes will be reviewed and verified as part of the learning process.
+
+Work in small steps: explain → try → inspect → review the diff → commit. Connect new concepts to familiar Java/MySQL work and verify both expected behavior and relevant failures.
