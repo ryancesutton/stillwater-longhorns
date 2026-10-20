@@ -4,27 +4,27 @@
 
 Build a Texas Longhorns briefing app while refreshing software engineering skills and learning data ingestion, relational modeling, MCP, agent orchestration, and security. Project Stillwater is the working umbrella name for the workforce-readiness effort.
 
-Use a data-first approach: ingest a broad historical dataset from one suitable source, then build two agents that consume it. Select coverage after checking source availability, permitted use, cost, and local machine capacity. Target multiple seasons of schedules, results, and team game statistics. Player data is optional.
+Use a data-first approach: ingest a broad historical dataset from one suitable source, then build two agents that consume it. Select coverage after checking source availability, permitted use, cost, and target VM capacity. Target multiple seasons of schedules, results, and team game statistics. Player data is optional.
 
 ## Scope and Architectural Decisions
 
-- Run the initial application and MySQL database locally on the developer’s Mac. Revisit hosting if capacity, availability, or deployment needs justify it.
-- A Linux VM on a friend’s PC is accessible through Tailscale and SSH as a possible future host. Remote installations require the friend’s permission; it is not an EC2 instance.
+- Develop locally on the Mac, then deploy the application, import process, MCP service, and MySQL together on a new Linux VM on a friend’s PC. A local MySQL installation is not required for the current setup milestone.
+- The friend will provision a new, smaller VM and has authorized MySQL setup there. Tailscale MagicDNS will provide hostname resolution for access over SSH. Provisioning, hostname, credentials, and capacity remain pending. Existing SSH access to a different VM does not establish access to the new one; neither VM is an EC2 instance.
 - Use MySQL as the primary datastore. S3, Athena, RDS, and cross-account AWS access are deferred.
 - Keep the interface in the terminal and use a fixed research → writing workflow.
 - Preserve original imports in a private local directory; store normalized records and source metadata in MySQL.
 - Start with one data source and a few bounded MCP tools. Defer live updates, scraping, a dashboard, and infrastructure-changing agents.
-- Use VS Code for reading, editing, debugging, and reviewing changes; use its local terminal for Git, imports, and verification. Remote–SSH is deferred unless the VM becomes the deployment target and installation permission is confirmed.
+- Use VS Code locally for reading, editing, debugging, and reviewing changes. Run deployed imports and verification on the new VM. Confirm permission before installing VS Code Remote–SSH server components or other software beyond the authorized MySQL setup.
 - Track the project in Git from the beginning and share through GitHub after reviewing files for secrets and private sandbox details.
 
 ## Architecture
 
 ```mermaid
 flowchart TD
-    D[One historical data source] --> IM[Import process on Mac]
+    D[One historical data source] --> IM[Import process on VM]
     IM --> RAW[Private original import files]
     IM --> DB[MySQL: normalized data and provenance]
-    U[You: terminal request] --> O[Orchestrator on Mac]
+    U[You: terminal request over SSH] --> O[Orchestrator on VM]
     O --> R[Research agent]
     R --> M[Restricted MCP retrieval service]
     M --> DB
@@ -35,7 +35,7 @@ flowchart TD
     M --> L
 ```
 
-All application services and MySQL initially run on the same Mac. Model calls use an external API. MySQL stays local to the host or private container network. Tailscale is only needed if remote development or hosting is adopted later; network connectivity does not grant database or operating-system permissions.
+The deployed application services and MySQL run together on the new VM. Model calls use an external API. MySQL stays local to the VM or its private container network; it is not exposed to the Mac over Tailscale. Tailscale provides network access, MagicDNS resolves the VM’s name, and SSH authenticates the remote session. None of these grants database permissions. Local development on the Mac remains separate from deployment.
 
 The orchestrator invokes research and writing sequentially. The research agent requests approved MCP tools; the MCP service validates arguments and runs bounded, parameterized queries. The writer receives structured findings and source references rather than database access. The orchestrator owns the model API credentials.
 
@@ -118,9 +118,9 @@ Planning estimate remains approximately 20–30 focused hours, subject to source
 - The GitHub repository includes setup instructions, an architecture diagram, sample output, security-check results, and meaningful progress commits.
 - You can explain the data flow, credentials, permissions, design tradeoffs, and single-host limitations.
 
-## Deferred VM Hosting Questions
+## VM Setup Status and Open Questions
 
-These questions do not block local development. Revisit them before moving the application to the friend’s VM. Linux and SSH access through Tailscale are confirmed; distribution, CPU count, and installation permissions remain unconfirmed.
+The friend has offered a new, smaller VM and authorized MySQL setup. The app and database will be hosted together there. These questions do not block local source evaluation, but must be resolved as relevant before remote setup. The existing VM’s resource measurements and SSH access do not establish the new VM’s capacity or access.
 
 1. Is the VM dedicated to my sandbox or shared? What packages, containers, services, and VS Code Remote–SSH components may I install?
    - Purpose: establish the permitted implementation and avoid affecting other workloads.

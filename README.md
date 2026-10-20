@@ -40,7 +40,9 @@ flowchart TD
     MCP --> Logs
 ```
 
-The initial application and MySQL database will run locally on the developer’s Mac. Hosting can be revisited as needed; a friend’s Linux VM accessed through Tailscale and SSH is a possible future option. The orchestrator will invoke an external model API and run the research and writing stages sequentially.
+Development begins locally on the developer’s Mac. The deployment target is a new Linux VM on a friend’s PC, with the application, import process, MCP service, and MySQL running together. Access will use Tailscale and SSH, with MagicDNS providing the VM’s hostname. MySQL will remain accessible only within that VM or its private container network. The orchestrator will invoke an external model API and run the research and writing stages sequentially.
+
+The friend has authorized MySQL setup on the new VM. Provisioning and access details are pending; capacity and permission for other installs, including application components and VS Code Remote–SSH, must be confirmed before remote setup. The existing VM is separate from this planned host.
 
 The research agent retrieves structured evidence through `list_games` and `get_game_data`. The writer receives that evidence and its source references without database or retrieval-tool access. The orchestrator controls the handoff, timeouts, and usage limits.
 
