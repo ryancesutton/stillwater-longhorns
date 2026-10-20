@@ -1,6 +1,11 @@
 # macOS
 .DS_Store
 
+# Python virtual environment and bytecode
+.venv/
+__pycache__/
+*.pyc
+
 # Local environment files and secrets
 .env
 .env.*

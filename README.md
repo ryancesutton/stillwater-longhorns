@@ -92,7 +92,28 @@ Database identities enforce database privileges, but services on one machine sti
 
 See the [project outline](docs/project-outline.md) for the detailed plan, security boundaries, learning approach, and next three implementation steps.
 
-Setup instructions will be added as implementation progresses. The programming language, model provider, and football data source have not yet been selected.
+Python 3.13 is selected for implementation. Local setup has been verified with Python 3.13.16 on an Intel Mac. The model provider and football data source remain undecided; MySQL setup is still pending.
+
+From the repository root, create and activate a project-specific virtual environment:
+
+```bash
+python3.13 -m venv .venv
+source .venv/bin/activate
+python --version
+python -m pip --version
+```
+
+Create the environment once; activate it again in each new development terminal. The pip path should be inside this repository’s `.venv/`. Use `python -m pip` for package installation so it uses the selected interpreter. No application dependencies have been selected yet.
+
+In VS Code, install the Python extension by Microsoft (`ms-python.python`), then run **Python: Select Interpreter** and choose `.venv/bin/python`.
+
+Verify the terminal interpreter with:
+
+```bash
+python -c "import sys; print(sys.executable); print('Stillwater is ready')"
+```
+
+The executable path should point inside `.venv/`. The environment and generated Python bytecode are excluded from Git; dependencies will be declared separately so the environment can be recreated. Run `deactivate` to leave the environment.
 
 The next steps are to establish the local development environment, validate a repeatable one-season import, and verify the restricted MCP tools before connecting the agents.
 

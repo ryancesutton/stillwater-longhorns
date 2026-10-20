@@ -45,7 +45,9 @@ The orchestrator invokes research and writing sequentially. The research agent r
 2. Select one suitable source and import one season into MySQL, preserving the original file and provenance. Rerun the import and verify that record counts and unique identifiers remain correct before expanding coverage.
 3. Build `list_games` and `get_game_data` with parameterized queries and a read-only database identity. Verify structured results, missing data, denied private-table reads, and denied dataset writes before connecting the agents.
 
-For each step, explain the concept and its connection to familiar Java/MySQL work, try it, inspect the result, review the diff, and commit. Language, data source, and model provider remain undecided.
+For each step, explain the concept and its connection to familiar Java/MySQL work, try it, inspect the result, review the diff, and commit. Python 3.13 is selected; data source and model provider remain undecided.
+
+Local setup progress: Python 3.13.16 is installed, the project’s `.venv` is created and verified, and VS Code’s Microsoft Python extension uses that environment. A terminal smoke check succeeded. MySQL configuration and application dependencies remain pending. See the README for environment setup commands.
 
 ## Initial Data Model
 
