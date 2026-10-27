@@ -51,6 +51,8 @@ Local setup progress: Python 3.13.16 is installed, the project’s `.venv` is cr
 
 ## Initial Data Model
 
+The [SQL review draft](../db/schema-draft.sql) starts with four tables: `teams`, `games`, `team_game_stats`, and `ingestion_runs`. It has not been executed. A separate `seasons` table is deferred; `games.season` holds the year for now. Notes will be added for the injection experiment, and player tables remain optional. The draft targets MySQL 8.4, pending environment confirmation and execution checks.
+
 | Table | Purpose |
 |---|---|
 | `teams` | Team identities and source identifiers |
@@ -69,6 +71,8 @@ Each `ingestion_runs` row will include `importer_version`: the full Git commit S
 Retrieval metadata alongside original responses describes the download. Import-run metadata describes loading that response into MySQL; the same downloaded file may be imported multiple times with different importer versions. Do not retroactively add an importer version to existing download metadata as though a database import had already occurred.
 
 ## Security Boundaries
+
+See the [permission matrix and enforcement checklist](permissions.md). Treat the new VM as unavailable until the project owner reports it ready; do not repeatedly request readiness updates. All remote setup and permission checks remain pending.
 
 | Identity or component | Allowed access |
 |---|---|

@@ -92,6 +92,8 @@ Database identities enforce database privileges, but services on one machine sti
 
 ## Development Setup
 
+Design references: [schema draft](db/schema-draft.sql), [permission plan](docs/permissions.md), and [source validation](docs/source-validation.md). The schema and permission plan have not been deployed or enforcement-tested.
+
 See the [project outline](docs/project-outline.md) for the detailed plan, security boundaries, learning approach, and next three implementation steps.
 
 Python 3.13 is selected for implementation. Local setup has been verified with Python 3.13.16 on an Intel Mac. The model provider and football data source remain undecided; MySQL setup is still pending.
