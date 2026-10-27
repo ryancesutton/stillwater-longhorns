@@ -58,11 +58,15 @@ Local setup progress: Python 3.13.16 is installed, the project’s `.venv` is cr
 | `games` | Date, teams, scores, venue, and source references |
 | `team_game_stats` | A team's statistics for a game |
 | `notes` | Source-attributed game notes, including controlled security fixtures |
-| `ingestion_runs` | Source, retrieval time, coverage, counts, and failures |
+| `ingestion_runs` | Source, retrieval time, importer version, coverage, counts, and failures |
 | `players` | Optional player identities |
 | `player_game_stats` | Optional individual game statistics |
 
 Use primary keys, foreign keys, and unique source identifiers to prevent duplicates and preserve relationships. Imports should be safe to rerun without duplicating records. Preserve source and ingestion-run references so briefing claims can be traced to records and original imports. Treat missing values as missing, not zero.
+
+Each `ingestion_runs` row will include `importer_version`: the full Git commit SHA of the importer code used for that database import. Also record `importer_worktree_dirty` to indicate whether tracked code had uncommitted changes; a commit alone cannot identify those changes. If Git information is unavailable, record an unknown version explicitly rather than guessing. Exact reproduction requires the committed code or a separately preserved copy of any uncommitted changes.
+
+Retrieval metadata alongside original responses describes the download. Import-run metadata describes loading that response into MySQL; the same downloaded file may be imported multiple times with different importer versions. Do not retroactively add an importer version to existing download metadata as though a database import had already occurred.
 
 ## Security Boundaries
 
