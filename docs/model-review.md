@@ -32,3 +32,9 @@ All 26 offline tests pass, including unknown/invalid calls never dispatching, se
 5. Verify model-selected game, factual claims and citations against retrieved evidence. Then test missing data, injected source instructions, and failure cases before declaring the demo ready.
 
 Full OS-level credential isolation and VM deployment remain deferred. Model low effort is not a security boundary.
+
+## First Live Run
+
+After the project owner stored a restricted Responses key and confirmed available credit and Luna access, the default Texas–Alabama request completed successfully. Four model requests reported 8,285 aggregate tokens. Research retrieved one game through the real MCP tools, then the writer produced four evidence-referenced claims. Scores, yardage, turnovers/interceptions, third-down values, venue and season matched returned evidence in a manual Codex review. See [sample briefing](sample-briefing.md).
+
+The local audit contained only approved metadata fields and a completed outcome; no prompt/response bodies or key values were logged. This verifies one live path, not all model behavior, injection resistance, or a dollar spending cap. The key remains outside Git. Earlier statements of no paid calls describe the pre-live checkpoint.

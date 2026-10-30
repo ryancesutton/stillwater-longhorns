@@ -8,7 +8,7 @@ No secret values belong in this document. Paths below are relative to the reposi
 | MySQL `stillwater_import` | `secrets/mysql-import-password` | Offline importer and local integration checks |
 | MySQL `stillwater_mcp` | `secrets/mysql-mcp-password` | Future MCP service; current permission checks |
 | MySQL `stillwater_view_owner` | None; locked against login | Definer privileges for the three approved views |
-| OpenAI model API | `secrets/openai-api-key` (setup pending) | Orchestrator authentication only; never MCP environment or prompt content |
+| OpenAI model API | `secrets/openai-api-key` | Orchestrator authentication only; never MCP environment or prompt content |
 | CFBD | `secrets/cfbd-api-key` | Source retrieval scripts only |
 
 Database passwords were generated locally with Python `secrets.token_hex(32)`: 32 cryptographically random bytes encoded as 64 hexadecimal characters. The language model supplied the generator code, not the password values. Generated values were not displayed in chat or command output. The CFBD key was supplied by the project owner through a hidden prompt.
