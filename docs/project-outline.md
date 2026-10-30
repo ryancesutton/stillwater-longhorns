@@ -41,9 +41,9 @@ The orchestrator invokes research and writing sequentially. The research agent r
 
 ## Next Three Implementation Steps
 
-1. Create the import and read-only MCP identities and approved views; verify allowed and denied database operations.
-2. Integrate the prepared importer with local MySQL. Verify real repeat imports and rollback behavior before expanding coverage.
-3. Implement bounded MCP tools and the fixed research → writer workflow, then test evidence citations, injected notes, failures, and the terminal demo.
+1. Implement and test bounded `list_games` and `get_game_data` MCP tools against the approved views using the read-only account.
+2. Select the model provider and build the fixed research → writer handoff with structured evidence, citations, usage limits, and sanitized logs.
+3. Test injection and failure cases, rehearse the local two-agent demo, and document remaining limits before future VM deployment.
 
 For each step, explain the concept and its connection to familiar Java/MySQL work, try it, inspect the result, review the diff, and commit. CFBD is the selected data source. Python 3.13 is the selected language; the model provider remains undecided.
 
@@ -53,12 +53,14 @@ CollegeFootballData (CFBD) is selected for historical schedules, results, and co
 
 ## Current Progress
 
+See the [checkpoint summary](checkpoint-summary.md) and [credential inventory/lifecycle](credentials.md) for the session digest and security limits.
+
 - Python 3.13.16, `.venv`, and the VS Code interpreter are configured.
 - CFBD responses are preserved privately. Source evaluation and offline normalization passed for 15 teams, 14 games, and 28 team-game statistics rows.
-- The importer and offline transaction simulation are prepared; all 14 offline tests passed. This does not establish real MySQL import behavior.
+- The importer passed all 14 offline tests plus real local MySQL loading, repeated-import ID/count stability, and controlled-failure rollback checks.
 - Docker Desktop and Compose run locally. MySQL 8.4.13 startup, administrator authentication, and loopback port binding were verified.
-- The four-table schema is applied. Representative unique-key, foreign-key, and CHECK tests passed; fixture rows were rolled back, leaving all four tables empty.
-- Import/MCP accounts, approved views, real imports, MCP tools, agents, and briefing output remain pending. The two-agent briefing is required for the demo.
+- The four-table schema is applied. Representative unique-key, foreign-key, and CHECK tests passed; fixture rows were rolled back. Subsequent real imports loaded 15 teams, 14 games, and 28 statistics rows, with separate import-run history.
+- MCP account, locked view owner, and approved views are created; allowed view reads and denied private/base reads and writes passed. The import account has passed required write and denied-operation checks. Real imports and populated MCP view counts passed. MCP tools, agents, and briefing output remain pending. The two-agent briefing is required for the demo.
 
 See [database checks](local-database-checks.md), [importer walkthrough](importer-review.md), and [permissions](permissions.md) for evidence and remaining checks.
 
@@ -81,7 +83,7 @@ Use primary keys, foreign keys, and unique source identifiers to prevent duplica
 
 ## Security Boundaries
 
-The [permission matrix](permissions.md) remains a plan. The local administrator identity has been used for schema setup; separate runtime identities and OS secret isolation have not yet been implemented.
+The [permission matrix](permissions.md) records local MCP grants and passed authorization checks. The administrator handles schema setup; import grants are verified, while OS secret isolation remains pending.
 
 | Identity or component | Allowed access |
 |---|---|

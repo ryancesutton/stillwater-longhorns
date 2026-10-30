@@ -1,6 +1,6 @@
 """Prepare verified archives offline; import through a supplied dedicated connection.
 
-The CLI is dry-run only. Connection setup and credentials are deliberately absent.
+The CLI defaults to dry-run. --write enables the reviewed local import account.
 """
 
 import argparse
@@ -132,7 +132,7 @@ def import_prepared(connection, prepared):
             connection.rollback()
         except Exception:
             pass
-        _close_cursor(cursor)
+        _close_quietly(cursor)
         raise ImportFailure("Could not persist import attempts; inspect run state before retrying.") from None
 
     stage = "writes"
@@ -179,15 +179,15 @@ def import_prepared(connection, prepared):
             raise ImportFailure("Dataset rolled back; failure status could not be confirmed. Reconcile run state.") from None
         raise ImportFailure("Dataset import failed and rolled back; failure status recorded.") from None
     finally:
-        _close_cursor(cursor)
+        _close_quietly(cursor)
     return {"run_ids": run_ids, "teams": len(prepared.teams), "games": len(prepared.games), "stats": len(prepared.stats)}
 
 
-def _close_cursor(cursor):
+def _close_quietly(resource):
     # Cleanup must not replace a sanitized failure or obscure a committed result.
     # The caller must close the dedicated connection regardless of outcome.
     try:
-        cursor.close()
+        resource.close()
     except Exception:
         pass
 
@@ -196,6 +196,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("schedule", type=Path)
     parser.add_argument("stats", type=Path)
+    parser.add_argument("--write", action="store_true", help="Import into local MySQL using stillwater_import")
     args = parser.parse_args()
     try:
         data = prepare(args.schedule, args.stats)
@@ -203,7 +204,22 @@ def main():
         raise SystemExit("Preparation failed: check saved archives and normalized values.") from None
     print(f"Prepared {len(data.teams)} teams, {len(data.games)} games, {len(data.stats)} statistics rows.")
     print(f"Importer commit: {data.importer_version or 'unknown'}; uncommitted changes: {data.worktree_dirty}")
-    print("Dry run only: no database connection, credentials, or writes.")
+    if not args.write:
+        print("Dry run only: no database connection, credentials, or writes.")
+        return
+    from local_db import connect_import
+    connection = None
+    try:
+        connection = connect_import()
+        result = import_prepared(connection, data)
+    except ImportFailure as error:
+        raise SystemExit(str(error)) from None
+    except Exception:
+        raise SystemExit("Local database connection/import failed; raw error suppressed. Reconcile run state before retrying.") from None
+    finally:
+        if connection is not None:
+            _close_quietly(connection)  # Both connection and cursor expose close().
+    print(f"Committed import as stillwater_import: {result}")
 
 
 if __name__ == "__main__":

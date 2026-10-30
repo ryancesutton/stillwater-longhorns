@@ -6,9 +6,9 @@ This is the first project in **Project Stillwater**, a collection of hands-on pr
 
 ## Status
 
-**Local data preparation and database schema are working.** CFBD source checks and offline normalization passed. MySQL 8.4.13 runs in Docker locally, with the four-table schema applied and representative database constraints verified. The tables remain empty after rollback-only fixtures.
+**Local data preparation and database schema are working.** CFBD source checks and offline normalization passed. MySQL 8.4.13 runs in Docker locally, with the four-table schema applied and representative database constraints verified. Real imports now contain 15 teams, 14 games, and 28 team-game statistics rows; repeated imports retained counts and IDs, and a controlled-failure rollback restored the dataset.
 
-The importer is prepared with offline transaction tests; real imports, restricted database accounts/views, MCP tools, agents, and briefing output remain pending. The two-agent briefing is required for the Saturday demo. See [local database checks](docs/local-database-checks.md) and the [importer review](docs/importer-review.md).
+The importer has passed offline tests and local MySQL integration. MCP tools, agents, and briefing output remain pending. The import identity has passed required write and denied-operation checks. MCP read-only views/grants are implemented and their allowed/denied checks passed, including populated view counts after import. The two-agent briefing is required for the Saturday demo. See [local database checks](docs/local-database-checks.md) and the [importer review](docs/importer-review.md).
 
 ## Project Goal
 
@@ -93,11 +93,11 @@ Database identities enforce database privileges, but services on one machine sti
 
 ## Development Setup
 
-Design references: [schema draft](db/schema-draft.sql), [permission plan](docs/permissions.md), and [source validation](docs/source-validation.md). The schema is applied locally with representative constraints tested; the permission plan is not yet implemented or enforcement-tested.
+Design references: [schema draft](db/schema-draft.sql), [permission plan](docs/permissions.md), and [source validation](docs/source-validation.md). The schema is applied locally with representative constraints tested; MCP view-only privileges are implemented and tested, while import-account grants are verified and runtime OS isolation remains pending.
 
 See the [project outline](docs/project-outline.md) for the detailed plan, security boundaries, learning approach, and next three implementation steps.
 
-Python 3.13 is selected for implementation. Local setup has been verified with Python 3.13.16 on an Intel Mac. CFBD is the selected football data source. The model provider remains undecided. Local MySQL startup, administrator authentication, and schema checks have passed; restricted-account setup remains pending.
+Python 3.13 is selected for implementation. Local setup has been verified with Python 3.13.16 on an Intel Mac. CFBD is the selected football data source. The model provider remains undecided. Local MySQL startup, administrator authentication, and schema checks have passed; MCP account checks passed; import-account authorization checks also passed.
 
 From the repository root, create and activate a project-specific virtual environment:
 
@@ -108,7 +108,7 @@ python --version
 python -m pip --version
 ```
 
-Create the environment once; activate it again in each new development terminal. The pip path should be inside this repository’s `.venv/`. Use `python -m pip` for package installation so it uses the selected interpreter. No application dependencies have been selected yet.
+Create the environment once; activate it again in each new development terminal. The pip path should be inside this repository’s `.venv/`. Use `python -m pip` for package installation so it uses the selected interpreter. Install the pinned database connector with `python -m pip install -r requirements.txt`.
 
 In VS Code, install the Python extension by Microsoft (`ms-python.python`), then run **Python: Select Interpreter** and choose `.venv/bin/python`.
 
@@ -120,7 +120,7 @@ python -c "import sys; print(sys.executable); print('Stillwater is ready')"
 
 The executable path should point inside `.venv/`. The environment and generated Python bytecode are excluded from Git; dependencies will be declared separately so the environment can be recreated. Run `deactivate` to leave the environment.
 
-The next steps are to create and test restricted database identities/views, integrate the importer with MySQL and verify repeat imports, then build restricted MCP tools and the required research/writer workflow.
+The next steps are to implement bounded MCP tools using the verified read-only identity, select the model provider, and build/test the required research → writer workflow. See the [checkpoint summary](docs/checkpoint-summary.md) and [credential inventory](docs/credentials.md).
 
 ## Learning Notes
 

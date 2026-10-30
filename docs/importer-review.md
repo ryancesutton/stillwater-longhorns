@@ -1,6 +1,6 @@
 # Offline Importer Review
 
-Status: prepared for review, not connected to MySQL. The CLI only prepares records and prints a summary; it cannot create a connection or execute writes. No connector dependency or credential configuration has been added.
+Status: local MySQL integration tested using `stillwater_import`. The CLI defaults to dry-run; `--write` explicitly enables local loading. `requirements.txt` pins MySQL Connector/Python 26.10.0. `scripts/local_db.py` reads only the private import credential, connects to `127.0.0.1:3307`, checks the account/server identity, disables autocommit and LOCAL INFILE, and sets connection/read/write timeouts.
 
 ## Walk Through the Code
 
@@ -37,7 +37,7 @@ The offline suite uses synthetic fixtures and a transactional simulation to chec
 - A commit that succeeds server-side but loses its acknowledgement is reported as uncertain.
 - Autocommit-enabled or already-active connections are rejected before import statements.
 
-The simulation does not parse SQL or emulate MySQL privilege/constraint enforcement. MySQL 8.4 syntax, connector behavior, real rollback and repeat-import results, and denied-access checks remain unverified until integration testing. This layer does not enforce MCP access or OS secret isolation.
+The simulation does not parse SQL or emulate MySQL privilege/constraint enforcement. MySQL 8.4.13 syntax, host connector access, real repeat imports, and controlled-failure rollback have now passed local integration checks; see [database checks](local-database-checks.md). This layer does not enforce MCP access or OS secret isolation.
 
 ## Commands for Review
 
@@ -48,7 +48,7 @@ python scripts/import_data.py \
   data/raw/cfbd-team-stats-20261027T020832174803Z/response.json
 ```
 
-The second command has no write mode. Database configuration, verified server version, connector selection, reviewed account grants, and explicit integration checks come next.
+The second command remains dry-run by default. Add `--write` only when intending a real local import. It always uses the restricted import account, never the root secret. This local connection has not been configured for authenticated remote TLS; do not point it at a remote server without a separate connection/security review.
 
 ## Official References
 
