@@ -8,7 +8,7 @@ This is the first project in **Project Stillwater**, a collection of hands-on pr
 
 **Local data preparation and database schema are working.** CFBD source checks and offline normalization passed. MySQL 8.4.13 runs in Docker locally, with the four-table schema applied and representative database constraints verified. Real imports now contain 15 teams, 14 games, and 28 team-game statistics rows; repeated imports retained counts and IDs, and a controlled-failure rollback restored the dataset.
 
-The importer has passed offline tests and local MySQL integration. MCP tools, agents, and briefing output remain pending. The import identity has passed required write and denied-operation checks. MCP read-only views/grants are implemented and their allowed/denied checks passed, including populated view counts after import. The two-agent briefing is required for the Saturday demo. See [local database checks](docs/local-database-checks.md) and the [importer review](docs/importer-review.md).
+The importer has passed offline tests and local MySQL integration. The two bounded MCP tools are implemented and verified over stdio; the research/writer implementation passes fake-model tests, while live model behavior and a generated briefing remain pending. The import identity has passed required write and denied-operation checks. MCP read-only views/grants are implemented and their allowed/denied checks passed, including populated view counts after import. The two-agent briefing is required for the Saturday demo. See [local database checks](docs/local-database-checks.md) and the [importer review](docs/importer-review.md).
 
 ## Project Goal
 
@@ -44,7 +44,7 @@ flowchart TD
 
 The Saturday demo will run locally on the developer’s Mac. MySQL is the selected database: the current instance is MySQL 8.4.13 in Docker, with persistent storage in the Compose `mysql_data` volume and a published port restricted to `127.0.0.1:3307`. Local Python code will connect through that port. The older host MySQL 5.7 installation is untouched.
 
-After the demo, deployment is planned to the friend’s Linux VMs, with the app and MySQL together on the new VM as the preferred arrangement. VM availability, capacity, final topology, and permissions for application installs remain unconfirmed. MySQL setup on the new VM is authorized. Remote access is planned through Tailscale/SSH with MagicDNS; no remote setup has occurred. The external model provider remains undecided.
+After the demo, deployment is planned to the friend’s Linux VMs, with the app and MySQL together on the new VM as the preferred arrangement. VM availability, capacity, final topology, and permissions for application installs remain unconfirmed. MySQL setup on the new VM is authorized. Remote access is planned through Tailscale/SSH with MagicDNS; no remote setup has occurred. OpenAI `gpt-6-luna` with low reasoning effort is selected; live API access is not yet verified.
 The planned research agent will retrieve structured evidence through `list_games` and `get_game_data`. The writer will receive that evidence and its source references without database or retrieval-tool access. The orchestrator will control the handoff, timeouts, and usage limits.
 
 ## Data Plan
@@ -97,7 +97,7 @@ Design references: [schema draft](db/schema-draft.sql), [permission plan](docs/p
 
 See the [project outline](docs/project-outline.md) for the detailed plan, security boundaries, learning approach, and next three implementation steps.
 
-Python 3.13 is selected for implementation. Local setup has been verified with Python 3.13.16 on an Intel Mac. CFBD is the selected football data source. The model provider remains undecided. Local MySQL startup, administrator authentication, and schema checks have passed; MCP account checks passed; import-account authorization checks also passed.
+Python 3.13 is selected for implementation. Local setup has been verified with Python 3.13.16 on an Intel Mac. CFBD is the selected football data source. OpenAI `gpt-6-luna` with low reasoning effort is selected for initial evaluation; account access and live behavior remain unverified. Local MySQL startup, administrator authentication, and schema checks have passed; MCP account checks passed; import-account authorization checks also passed.
 
 From the repository root, create and activate a project-specific virtual environment:
 
@@ -120,7 +120,7 @@ python -c "import sys; print(sys.executable); print('Stillwater is ready')"
 
 The executable path should point inside `.venv/`. The environment and generated Python bytecode are excluded from Git; dependencies will be declared separately so the environment can be recreated. Run `deactivate` to leave the environment.
 
-The next steps are to implement bounded MCP tools using the verified read-only identity, select the model provider, and build/test the required research → writer workflow. See the [checkpoint summary](docs/checkpoint-summary.md) and [credential inventory](docs/credentials.md).
+The research → writer implementation passes fake-model tests, including real local MCP/database retrieval; live model integration and quality checks remain pending. See the [model review](docs/model-review.md) before enabling paid calls. See the [MCP review](docs/mcp-review.md) for implemented guardrails and test results. See the [checkpoint summary](docs/checkpoint-summary.md) and [credential inventory](docs/credentials.md).
 
 ## Learning Notes
 

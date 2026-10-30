@@ -50,4 +50,4 @@ python scripts/import_data.py \
   data/raw/cfbd-team-stats-20261027T020832174803Z/response.json --write
 ```
 
-Earlier empty-table results describe their checkpoints; the four tables now contain imported data and run history. Empty-database schema/import grant fixture scripts must not be rerun on this populated database. Runtime OS isolation, MCP tools, agent behavior, and remote deployment remain pending.
+Earlier empty-table results describe their checkpoints; the four tables now contain imported data and run history. Empty-database schema/import grant fixture scripts must not be rerun on this populated database. MCP tools now pass live database/stdin-stdout integration checks. Runtime OS isolation, live model behavior, and remote deployment remain pending. See [model review](model-review.md) for fake-model tests.

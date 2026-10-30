@@ -1,6 +1,6 @@
 # Permission Plan
 
-Status: local MCP database authorization is implemented and tested. `stillwater_mcp` can SELECT three approved views only. The locked `stillwater_view_owner` defines those views. The import identity is also created with its required writes and denied operations tested. The actual MCP service and agent/OS isolation remain pending. See [database checks](local-database-checks.md). Treat the new VM as unavailable until the project owner explicitly reports it ready.
+Status: local MCP database authorization is implemented and tested. `stillwater_mcp` can SELECT three approved views only. The locked `stillwater_view_owner` defines those views. The import identity is also created with its required writes and denied operations tested. The stdio MCP service is implemented and tested; agent/OS isolation remains pending. See the [MCP review](mcp-review.md). See [database checks](local-database-checks.md). Treat the new VM as unavailable until the project owner explicitly reports it ready.
 
 ## Identities and Privileges
 
@@ -63,11 +63,11 @@ Also test rollback on failed imports and missing-data responses. Agent refusal i
 
 `stillwater_mcp`@`%` has SELECT only on the three named views, with no inherited roles or grant option. `USAGE ON *.*` means no global data privileges, not permission to read all databases. `%` is a broad MySQL client-host match chosen for Docker NAT and later host-to-container access; it is not a network restriction. Docker’s loopback port binding limits the published host port, while processes/containers able to reach this database network can still attempt authentication. Reassess host matching for VM deployment.
 
-The view owner is `stillwater_view_owner`@`localhost`, locked against login. It has SELECT on teams/games/stats and only five provenance columns of ingestion_runs. The views use SQL SECURITY DEFINER so MCP can query the views without base-table grants. No filesystem paths or error summaries are exposed. This does not limit query cost or tool inputs; those controls remain to be implemented.
+The view owner is `stillwater_view_owner`@`localhost`, locked against login. It has SELECT on teams/games/stats and only five provenance columns of ingestion_runs. The views use SQL SECURITY DEFINER so MCP can query the views without base-table grants. No filesystem paths or error summaries are exposed. This does not limit query cost or tool inputs; those controls are implemented in the retrieval layer, with offline and real stdio tests recorded in the MCP review.
 
 Setup: `python scripts/setup_mcp_identity.py` is one-time and refuses existing accounts or password files; account/view DDL is not transactional. Do not blindly rerun it after partial failure. The password is never printed or passed in process arguments. The DB still stores an authentication verifier as normal. Neither the host password file nor local Compose secrets protect against programs running as the host user or Docker administrators.
 
-Verification: `python scripts/check_mcp_permissions.py` connects via TCP inside the container as MCP using a temporary private client configuration. Host Python connector access is now verified for the import identity; MCP host connector integration remains pending. Approved view counts after import were verified as 15 teams, 14 games, and 28 statistics rows. Ten negative tests returned MySQL privilege error 1142, including private-table access and writes. At the initial grant-test checkpoint, dataset counts stayed zero and the harmless private fixture was unchanged. Football data was loaded afterward.
+Verification: `python scripts/check_mcp_permissions.py` connects via TCP inside the container as MCP using a temporary private client configuration. Host Python connector access is now verified for the import identity; MCP host connector integration is now verified through the real stdio tools. Approved view counts after import were verified as 15 teams, 14 games, and 28 statistics rows. Ten negative tests returned MySQL privilege error 1142, including private-table access and writes. At the initial grant-test checkpoint, dataset counts stayed zero and the harmless private fixture was unchanged. Football data was loaded afterward.
 
 ## Local Import Account
 

@@ -35,17 +35,17 @@ flowchart TD
     M --> L
 ```
 
-The demo targets the Mac, with MySQL already running in Docker and the application workflow still to be implemented. Compose publishes MySQL only on `127.0.0.1:3307`, backed by the `mysql_data` volume. No database port is exposed on the LAN or tailnet by this configuration. Future VM deployment will use Tailscale/SSH; network connectivity does not grant database or operating-system permissions. Model calls will use an external API; the provider remains undecided.
+The demo targets the Mac, with MySQL already running in Docker and the application workflow still to be implemented. Compose publishes MySQL only on `127.0.0.1:3307`, backed by the `mysql_data` volume. No database port is exposed on the LAN or tailnet by this configuration. Future VM deployment will use Tailscale/SSH; network connectivity does not grant database or operating-system permissions. Model calls will use an external API; OpenAI Luna–Low is selected, with live access/evaluation pending.
 
 The orchestrator invokes research and writing sequentially. The research agent requests approved MCP tools; the MCP service validates arguments and runs bounded, parameterized queries. The writer receives structured findings and source references rather than database access. The orchestrator owns the model API credentials.
 
 ## Next Three Implementation Steps
 
-1. Implement and test bounded `list_games` and `get_game_data` MCP tools against the approved views using the read-only account.
-2. Select the model provider and build the fixed research → writer handoff with structured evidence, citations, usage limits, and sanitized logs.
+1. Review the implemented `list_games` and `get_game_data` MCP tools and their verified boundaries in the [MCP review](mcp-review.md).
+2. Review and live-test the implemented research → writer handoff with OpenAI Luna–Low; fake-model tests pass, while model key/account access and live evaluation remain pending. See [model review](model-review.md).
 3. Test injection and failure cases, rehearse the local two-agent demo, and document remaining limits before future VM deployment.
 
-For each step, explain the concept and its connection to familiar Java/MySQL work, try it, inspect the result, review the diff, and commit. CFBD is the selected data source. Python 3.13 is the selected language; the model provider remains undecided.
+For each step, explain the concept and its connection to familiar Java/MySQL work, try it, inspect the result, review the diff, and commit. CFBD is the selected data source. Python 3.13 is the selected language; OpenAI `gpt-6-luna` with low reasoning effort is selected; live account access and behavior remain unverified.
 
 ## Selected Data Source
 
@@ -60,7 +60,7 @@ See the [checkpoint summary](checkpoint-summary.md) and [credential inventory/li
 - The importer passed all 14 offline tests plus real local MySQL loading, repeated-import ID/count stability, and controlled-failure rollback checks.
 - Docker Desktop and Compose run locally. MySQL 8.4.13 startup, administrator authentication, and loopback port binding were verified.
 - The four-table schema is applied. Representative unique-key, foreign-key, and CHECK tests passed; fixture rows were rolled back. Subsequent real imports loaded 15 teams, 14 games, and 28 statistics rows, with separate import-run history.
-- MCP account, locked view owner, and approved views are created; allowed view reads and denied private/base reads and writes passed. The import account has passed required write and denied-operation checks. Real imports and populated MCP view counts passed. MCP tools, agents, and briefing output remain pending. The two-agent briefing is required for the demo.
+- MCP account, locked view owner, and approved views are created; allowed view reads and denied private/base reads and writes passed. The import account has passed required write and denied-operation checks. Real imports and populated MCP view counts passed. MCP tools now pass real stdio discovery/call checks and all 26 offline tests pass. The research/writer implementation passes fake-model tests; live model behavior and generated output remain pending. The two-agent briefing is required for the demo.
 
 See [database checks](local-database-checks.md), [importer walkthrough](importer-review.md), and [permissions](permissions.md) for evidence and remaining checks.
 
@@ -158,11 +158,18 @@ AWS IAM and cross-account S3 questions remain deferred until an AWS extension is
 
 ## Learning and Collaboration Approach
 
+Use the [periodic knowledge-check plan](learning-review.md) across the whole project. Ask one question at a time, connect corrections to code, and revisit weak areas without requiring memorization.
+
 For each concept, explain what it means, why this project needs it, how it relates to familiar Java/MySQL concepts, where it fits in the architecture, and how to verify success and relevant failures.
 
 Work in small steps: explain the change → try it → inspect the result → review the diff → commit. Record unresolved questions and important decisions. Give concise prompting feedback when clarifying goals, context, constraints, or acceptance criteria would help.
 
 ## Concept Notes
+
+- **Minimal MCP environment:** pass only required OS settings to the server subprocess; exclude model keys and unrelated variables, then test the effective child environment. This does not isolate files owned by the same OS user.
+- **Restricted tool surface:** allowlist tool names and validate arguments in the orchestrator as well as the MCP server. Expose no file, shell, URL-fetching, or arbitrary SQL tools; the writer receives evidence without tools.
+- **Payload and log hygiene:** build outbound requests from approved fields. Keep credentials in authentication configuration, never prompt content. Log only sanitized stage/tool IDs, timings, usage and outcomes; test with fake-secret markers and a fake model before live calls.
+- **Model security limits:** low reasoning effort is a cost/performance choice, not access control. Treat retrieved instructions as untrusted data; retain database grants and call/time budgets regardless of model behavior. Full runtime OS credential isolation is deferred beyond the local demo.
 
 - **Relational database:** structured tables connected through keys; supports SQL queries, constraints, and transactions.
 - **Data ingestion:** retrieving source data, checking it, and importing it into a usable structure.

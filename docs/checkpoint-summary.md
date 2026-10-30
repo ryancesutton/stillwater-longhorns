@@ -25,14 +25,14 @@ MCP database access is restricted to three views. Its own authenticated queries 
 
 ## Evidence and Limits
 
-All 14 offline tests passed; dependency consistency and whitespace checks passed. Live MySQL checks are recorded in [local-database-checks.md](local-database-checks.md). This is not a complete security audit or dependency vulnerability scan. Network-loss recovery remains simulated, and schema constraints were sampled rather than exhaustively tested.
+All 26 offline tests now pass; dependency consistency and whitespace checks passed. Live MySQL checks are recorded in [local-database-checks.md](local-database-checks.md). This is not a complete security audit or dependency vulnerability scan. Network-loss recovery remains simulated, and schema constraints were sampled rather than exhaustively tested.
 
 Source accuracy checks cover the schedule and selected box-score fields, not every statistic. Return statistics are excluded after a documented discrepancy. Credentials are private plaintext files accessible to the host user; OS isolation and secret recovery are not implemented/tested. See [credential inventory](credentials.md).
 
 ## Next Session
 
-Implement bounded `list_games` and `get_game_data` MCP tools using the read-only account. Then connect the fixed research → writer workflow, with structured evidence, references, timeouts, usage limits, sanitized logs, and injection/failure checks. The two-agent sourced briefing is required for the local Saturday demo; VM deployment comes afterward.
+Bounded MCP tools now pass real stdio integration checks. The research → writer orchestrator has passed fake-model tests and fake-model/real-MCP integration, including minimal child environment, tool allowlists, evidence projection, citation-reference checks, call budgets and sanitized audit events. See [MCP review](mcp-review.md) and [model review](model-review.md). Next arrange the API project/key, run a bounded live briefing, and test factual grounding, injection behavior and failures. The two-agent sourced briefing is required for the local Saturday demo; VM deployment comes afterward.
 
-The model provider remains undecided. No MCP service, agent workflow, or completed briefing exists yet. Remaining estimate is roughly 3.5–7 focused hours, including integration and rehearsal; this is contingent on model/tool integration going smoothly.
+OpenAI `gpt-6-luna` with low reasoning effort is selected. No API key has been arranged yet, no paid model call has been made, and no real generated briefing exists. Remaining estimate is roughly 2–5 focused hours for access setup, live evaluation/fixes, presentation and rehearsal; account access and model behavior may increase it.
 
-Continue explaining security changes before implementation and pointing to their code. Review both permitted and denied cases, and use short recall questions to check understanding.
+Use [learning-review.md](learning-review.md) for periodic whole-project checks. Continue explaining security changes before implementation and pointing to their code. Review both permitted and denied cases, and use short recall questions to check understanding.
