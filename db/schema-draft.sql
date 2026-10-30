@@ -1,5 +1,6 @@
--- REVIEW DRAFT: not executed; not yet a versioned migration.
--- Target: MySQL 8.4, subject to VM setup confirmation. Do not use on the
+-- Reviewed initial schema: applied to local Docker MySQL 8.4.13.
+-- Not yet a versioned migration. CREATE statements are not rerunnable as-is.
+-- Target: MySQL 8.4. Do not use on the
 -- existing MySQL 5.7 installation: CHECK enforcement must be verified.
 -- Run eventually with the migration identity against the chosen project DB.
 -- No CREATE DATABASE, users, grants, secrets, or destructive statements here.

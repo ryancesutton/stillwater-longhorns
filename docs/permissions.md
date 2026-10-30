@@ -1,6 +1,6 @@
 # Permission Plan
 
-Status: proposed, not deployed or enforcement-tested. Treat the new VM as unavailable until the project owner explicitly reports it ready. Local planning and implementation can continue without remote access.
+Status: runtime privileges and views are proposed, not deployed or enforcement-tested. The local schema has been applied using `root@localhost`; representative data-integrity constraints passed, as recorded in [local database checks](local-database-checks.md). Treat the new VM as unavailable until the project owner explicitly reports it ready. Local planning and implementation can continue without remote access.
 
 ## Identities and Privileges
 
@@ -15,7 +15,7 @@ Authentication establishes which identity is connecting. Authorization determine
 | Research agent | Request bounded `list_games` and `get_game_data` tools through the orchestrator | No SQL/shell tool, database credentials, CFBD key, or migration/import credentials |
 | Writer agent | Receive structured research evidence and source references | No retrieval tools or database credentials |
 
-Administrator and migration duties may initially share an administrative identity if required by the environment; document that choice and keep it outside all runtime processes. No global runtime grants or `GRANT OPTION` are planned. Final account host matching and authentication configuration must be reviewed on the actual VM.
+Administrator and migration duties may initially share an administrative identity if required by the environment; document that choice and keep it outside all runtime processes. No global runtime grants or `GRANT OPTION` are planned. Account host matching and authentication configuration must be reviewed for the local Docker connection and again for future VM deployment.
 
 ## Approved Read Surface
 
@@ -35,7 +35,9 @@ SQL grants enforce database permissions. Tool code separately validates identifi
 
 Keep private configuration outside Git and logs. On the VM, use distinct OS identities or suitably isolated containers where permitted so the agent runtime cannot read import/admin secrets. Merely using separate MySQL accounts does not isolate files owned by a shared OS user. Single-host compromise or privileged host access remains a shared risk.
 
-Keep MySQL bound to VM loopback or a private container network without a published database port. Access the terminal application through SSH over Tailscale; MagicDNS resolves the host name and does not grant database privileges. Use local MCP transport initially. No remote configuration is authorized by this document alone.
+Current local implementation: MySQL 8.4.13 in Docker publishes only `127.0.0.1:3307` to the Mac, using a separate persistent volume. The old host installation is untouched. The administrator password is a private ignored file mounted as a Compose secret; it is not an encrypted vault. Restricted-account credentials and OS isolation remain pending.
+
+Future VM plan: keep MySQL bound to VM loopback or a private container network without a public database port. Access the terminal application through SSH over Tailscale; MagicDNS resolves the host name and does not grant database privileges. Use local MCP transport initially. No remote configuration is authorized by this document alone.
 
 ## Enforcement Checklist
 

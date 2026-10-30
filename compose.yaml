@@ -1,0 +1,34 @@
+name: stillwater-longhorns
+
+services:
+  db:
+    image: mysql:8.4.13
+    # Explicit loopback binding: no LAN or Tailscale listener.
+    # Port 3307 avoids the older local MySQL installation's usual 3306.
+    ports:
+      - "127.0.0.1:3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_DATABASE: stillwater
+    secrets:
+      - mysql_root_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command:
+      - --mysqlx=OFF
+      - --innodb-buffer-pool-size=128M
+    mem_limit: 1g
+    # Bounded logs; restart explicitly during development.
+    restart: "no"
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+secrets:
+  mysql_root_password:
+    file: ./secrets/mysql-root-password
+
+volumes:
+  mysql_data:

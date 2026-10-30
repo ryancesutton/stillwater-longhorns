@@ -32,7 +32,7 @@ def utc_datetime(value):
     return result
 
 
-def load_verified(path, endpoint):
+def load_verified(path, endpoint, *, include_metadata=False):
     """Verify bytes and request scope against adjacent retrieval metadata."""
     body = path.read_bytes()
     metadata = json.loads(path.with_name("metadata.json").read_text())
@@ -48,7 +48,8 @@ def load_verified(path, endpoint):
     retrieved = datetime.fromisoformat(metadata["retrieved_at_utc"])
     if retrieved.utcoffset() is None:
         raise ValueError("Retrieval timestamp must include a timezone.")
-    return json.loads(body)
+    records = json.loads(body)
+    return (records, metadata) if include_metadata else records
 
 
 def normalize_schedule(schedule):
