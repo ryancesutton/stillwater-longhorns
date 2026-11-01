@@ -75,3 +75,7 @@ Evaluation approach reference: [official OpenAI documentation on agent safety](h
 - Representative demo requests and presentation rehearsal.
 
 Timeout cancellation cannot guarantee an already-sent provider request stops or avoids billing. Reported-token limits are checked after responses and are not a hard dollar cap. Same-OS-user credential isolation remains deferred.
+
+## Subsequent UI Checks
+
+The local web interface adds HTTP request boundaries without changing database grants or MCP tools. The suite now passes 41 Python tests, including six HTTP tests; separate search checks cover aliases, context, and ambiguity without paid requests. See [web UI verification and limitations](web-ui.md) and [alias sources/tests](team-aliases.md). Browser visual feedback from Ry is recorded separately from HTTP tests; no automated browser was connected.

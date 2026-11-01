@@ -40,4 +40,15 @@ After the Monday demo, slow down and trace one game end-to-end, then have the le
 - Revisit environment minimization versus OS isolation: withholding environment secrets does not block same-user file access.
 - A claim is one factual statement with an evidence reference. Our two-claim minimum was a presentation rule, not a security boundary; accepting one supported claim handles sparse data without padding. Empty output and unknown references still fail.
 - Ask Ry to distinguish deterministic code checks, live behavior observed in one fixture, and separately tested database enforcement. A passing injection attempt is not proof against all attacks.
-- Next milestone: basic React UI on a separate branch, then rehearsal near Monday afternoon. Continue one-question-at-a-time reviews.
+- Next milestone: small Python-served web UI on a separate branch, then rehearsal near Monday afternoon. Continue one-question-at-a-time reviews.
+
+## UI and Identity Review Topics
+
+- Alias versus identity: BYU and Brigham Young can select the same imported team without changing CFBD names or IDs. A name is not a unique database identifier.
+- Context and ambiguity: OSU has one matching opponent in this schedule; UW has two. Ask Ry how the application should behave when coverage expands or a team is played twice.
+- Reviewed source configuration versus runtime web access: researching a static map does not give the agent internet tools or write permission.
+- Browser checks versus server enforcement: users can bypass JavaScript; Python must still validate IDs, origin/token, request shape and usage limits.
+- Client rendering: use textContent for untrusted model/source strings; never treat them as executable HTML.
+- Review the UI feedback history in [web-ui.md](web-ui.md). Ry’s visual approval and HTTP integration tests are separate evidence from automated browser testing, which was unavailable.
+
+Nickname review: distinguish a school identity from its nickname and mascot character. Ask why Cowboys/Pokes and Cougars need clarification in the same schedule, why Cougs and Coogs are not automatically interchangeable, and why a reviewed alias source does not prove global uniqueness. Tests include future Washington State/Cougs ambiguity. Browser search is still a convenience layer; Python and database controls remain independent.

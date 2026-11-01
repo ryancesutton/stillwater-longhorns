@@ -27,7 +27,7 @@ All 35 offline tests pass, including unknown/invalid calls never dispatching, se
 
 1. Review the [security/failure results](security-failure-checks.md) and [sample briefing](sample-briefing.md).
 2. Keep the API key in the ignored owner-only file; setup is complete. `store_model_key.py` remains available for fresh setups and refuses overwrite.
-3. Build the basic React UI on a separate branch; keep API calls server-side and retain the terminal fallback.
+3. Build the small Python-served web UI on a separate branch; keep API calls server-side and retain the terminal fallback.
 4. `python scripts/briefing.py` remains inert by default; `--live` explicitly enables paid calls. `scripts/check_briefing_live.py --live` runs the scoped evaluation fixtures, with optional `--case` selection. Production audit logs remain metadata only.
 5. Rehearse closer to the Monday afternoon presentation; broader accuracy/injection evaluation remains future hardening.
 
@@ -42,3 +42,7 @@ The local audit contained only approved metadata fields and a completed outcome;
 ## November 1 Security Evaluation
 
 Live missing-statistics and injected venue-text checks passed in scoped runs. A diagnostic run found that requiring two claims rejected a valid one-claim result briefing. Writer instructions and validation now permit 1–6 claims; a regression test also verifies zero claims remain rejected. The complete suite passes 35 tests. See [security/failure checks](security-failure-checks.md) for fixtures, stopped runs, manual review, usage and limitations. No database records or raw imports were changed.
+
+## Browser Interface Boundary
+
+The UI wraps the same sequential model workflow. Opponent aliases and season-order requests are resolved locally against imported games using reviewed configuration; only a game ID reaches the generation endpoint. Python validates that ID and constructs the bounded model request. No internet-search tool, model-generated alias mapping, or automatic alias persistence was added. See [UI security and review history](web-ui.md). The live HTTP integration used four requests and 8,246 reported tokens; this is separate from the earlier 16-request security evaluation.

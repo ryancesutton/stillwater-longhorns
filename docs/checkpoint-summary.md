@@ -35,6 +35,12 @@ Bounded MCP tools and the sequential research → writer workflow are implemente
 
 OpenAI `gpt-6-luna` with low reasoning effort is selected and live account access is verified. The November 1 evaluation used 16 requests and 29,567 reported tokens across four runs, including two stopped missing-stat runs. These observations do not prove general factual accuracy or injection resistance.
 
-Next build a basic React UI on a separate branch, retaining the terminal fallback. Estimate 2–4 focused hours for a basic version, subject to findings. Rehearse closer to the Monday afternoon local presentation; VM deployment remains deferred.
+The initial Python-served web UI is implemented on `feature/local-web-ui`, retaining the terminal fallback. See [web UI](web-ui.md) for startup, boundaries, and remaining browser review. Rehearse closer to the Monday afternoon local presentation; VM deployment remains deferred.
 
 Use [learning-review.md](learning-review.md) for periodic whole-project checks. Continue explaining security changes before implementation and pointing to their code. Review both permitted and denied cases, and use short recall questions to check understanding.
+
+UI follow-up: Ry approved the initial appearance. Longhorns replaced visible Stillwater branding; scrolling now occurs on generation/results or saved-sample actions, not dropdown selection. Bounded query parsing supports season game order and opponent names, now including sourced aliases with ambiguity handling. No new dependencies, database grants, model tools, or runtime web access were added. See [UI review history and security](web-ui.md) and [alias research](team-aliases.md). Browser verification of updated aliases and a user-confirmed live browser generation remain pending.
+
+The demo search now supports sourced mascot/team-nickname variants, with 102 query checks plus an input-order assertion passing. Cowboys/Pokes/Cougars remain ambiguous in the actual imported season. Cougs and Coogs are distinct reviewed spellings; broader coverage requires collision review. Python suite remains 41 tests. See [UI behavior](web-ui.md) and [alias sources](team-aliases.md).
+
+Ry has approved the current UI feature set as sufficient for the demo. Refresh now starts at the top; selecting a game stays in place. Next session starts with intensive review, a demo script including fallback behavior, and a few clear Mermaid diagrams for the mentor. Keep feature scope fixed while preparing the presentation. UI work is on `feature/local-web-ui`; main retains the previous terminal checkpoint until an explicit merge.

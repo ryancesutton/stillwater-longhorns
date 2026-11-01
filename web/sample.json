@@ -1,0 +1,45 @@
+{
+  "briefing": {
+    "title": "Texas vs. Alabama",
+    "claims": [
+      {
+        "text": "Texas defeated Alabama 34\u201324 in the 2023 regular season at Bryant-Denny Stadium.",
+        "evidence_ref": "cfbd:game:401520183"
+      },
+      {
+        "text": "Texas recorded 454 total yards, including 349 passing yards; Alabama recorded 362 total yards, including 255 passing yards.",
+        "evidence_ref": "cfbd:game:401520183"
+      },
+      {
+        "text": "Alabama threw two interceptions and had two turnovers; Texas had no turnovers.",
+        "evidence_ref": "cfbd:game:401520183"
+      },
+      {
+        "text": "Texas converted 7 of 18 third downs, while Alabama converted 5 of 14.",
+        "evidence_ref": "cfbd:game:401520183"
+      }
+    ],
+    "limitations": [
+      "Selected team statistics only; no play-by-play, return statistics, or detailed defensive statistics."
+    ]
+  },
+  "evidence": [
+    {
+      "evidence_ref": "cfbd:game:401520183",
+      "source": "CollegeFootballData",
+      "snapshot": "Saved October 30 briefing; abbreviated evidence summary, not a fresh database retrieval.",
+      "game": {
+        "source_game_id": 401520183,
+        "season": 2023,
+        "home_team": "Alabama",
+        "away_team": "Texas",
+        "home_points": 24,
+        "away_points": 34
+      },
+      "game_response_sha256": "934b475693694dded5befa4cb0c9899d168dd3c0ae8005149f893202e797fc3f",
+      "team_stats_response_sha256": "920527eed3186e1ce7c5164174b7ef5d0b61b2fb445d8b5408e3e87dbde54839"
+    }
+  ],
+  "model_calls": 4,
+  "reported_tokens": 8285
+}
