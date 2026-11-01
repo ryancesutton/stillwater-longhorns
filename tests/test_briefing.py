@@ -7,7 +7,7 @@ import unittest
 import asyncio
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import AsyncMock, patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from briefing import Audit, WorkflowError, minimal_mcp_environment, run_workflow
@@ -97,6 +97,48 @@ class BriefingTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaisesRegex(WorkflowError, "No game evidence"):
             await self.run_case(model, FakeTools())
         self.assertEqual(len(model.payloads), 1)
+
+    async def test_not_found_stops_before_writer(self):
+        tools = FakeTools()
+        tools.call_tool = AsyncMock(
+            return_value=SimpleNamespace(is_error=False, structured_content={"status": "not_found"}))
+        model = FakeModel([response([tool_call()]), response([])])
+        with self.assertRaisesRegex(WorkflowError, "No game evidence"):
+            await self.run_case(model, tools)
+        self.assertEqual(len(model.payloads), 2)
+
+    async def test_null_stat_reaches_writer_without_becoming_zero(self):
+        data = copy.deepcopy(DATA)
+        data["team_stats"] = [{"team": "Texas", "rushing_yards": None}]
+        data["missing_team_stats"] = True
+        tools = FakeTools()
+        tools.call_tool = AsyncMock(return_value=SimpleNamespace(is_error=False, structured_content=data))
+        model = FakeModel([response([tool_call()]), response([]), writer_response()])
+        result, _ = await self.run_case(model, tools)
+        evidence = json.loads(model.payloads[-1]["input"][0]["content"])["evidence"][0]
+        self.assertIsNone(evidence["team_stats"][0]["rushing_yards"])
+        self.assertTrue(evidence["missing_team_stats"])
+        self.assertIsNone(result["evidence"][0]["team_stats"][0]["rushing_yards"])
+
+    async def test_sparse_evidence_accepts_one_claim_but_not_empty_claims(self):
+        for count in (1, 0):
+            with self.subTest(count=count):
+                writer = writer_response()
+                part = writer["output"][0]["content"][0]
+                value = json.loads(part["text"])
+                value["claims"] = value["claims"][:count]
+                part["text"] = json.dumps(value)
+                tools = FakeTools()
+                data = copy.deepcopy(DATA)
+                data["missing_team_stats"] = True
+                tools.call_tool = AsyncMock(return_value=SimpleNamespace(is_error=False, structured_content=data))
+                model = FakeModel([response([tool_call()]), response([]), writer])
+                if count:
+                    result, _ = await self.run_case(model, tools)
+                    self.assertEqual(len(result["briefing"]["claims"]), 1)
+                else:
+                    with self.assertRaisesRegex(WorkflowError, "validation"):
+                        await self.run_case(model, tools)
 
     async def test_incomplete_and_usage_failure(self):
         for r in ({"status": "incomplete", "usage": {"input_tokens": 1, "output_tokens": 2500}},

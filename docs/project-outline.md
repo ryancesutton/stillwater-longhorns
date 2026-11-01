@@ -8,10 +8,10 @@ Use a data-first approach: ingest historical data from CollegeFootballData (CFBD
 
 ## Scope and Architectural Decisions
 
-- Run the Saturday demo locally on the Mac. MySQL is selected and currently runs as MySQL 8.4.13 in Docker; the Python application will run locally.
+- Run the Monday afternoon demo locally on the Mac. MySQL is selected and currently runs as MySQL 8.4.13 in Docker; the Python application will run locally.
 - Deploy to the friend’s Linux VMs after the demo, preferring app and MySQL together on the new VM. The new VM is unavailable until the project owner reports otherwise. MySQL installation there is authorized; final topology, capacity, access, and other installation permissions remain pending. Existing SSH access is to the original VM, not proof that the new VM is ready. These are not EC2 instances.
 - Use MySQL as the primary datastore. S3, Athena, RDS, and cross-account AWS access are deferred.
-- Keep the interface in the terminal and use a fixed research → writing workflow.
+- Retain the terminal workflow as a fallback; try a basic React UI on a separate branch before rehearsal. Use a fixed research → writing workflow.
 - Preserve original imports in a private local directory; store normalized records and source metadata in MySQL.
 - Use CollegeFootballData (CFBD) as the single data source with a few bounded MCP tools. Defer live updates, scraping, a dashboard, and infrastructure-changing agents.
 - Use VS Code for reading, editing, debugging, and reviewing changes; use its local terminal for Git, imports, and verification. Remote–SSH is deferred unless the VM becomes the deployment target and installation permission is confirmed.
@@ -35,17 +35,17 @@ flowchart TD
     M --> L
 ```
 
-The demo targets the Mac, with MySQL already running in Docker and the application workflow still to be implemented. Compose publishes MySQL only on `127.0.0.1:3307`, backed by the `mysql_data` volume. No database port is exposed on the LAN or tailnet by this configuration. Future VM deployment will use Tailscale/SSH; network connectivity does not grant database or operating-system permissions. Model calls will use an external API; OpenAI Luna–Low is selected, with live access/evaluation pending.
+The demo targets the Mac, with MySQL already running in Docker and the research → writer workflow verified on a live sample. Compose publishes MySQL only on `127.0.0.1:3307`, backed by the `mysql_data` volume. No database port is exposed on the LAN or tailnet by this configuration. Future VM deployment will use Tailscale/SSH; network connectivity does not grant database or operating-system permissions. Model calls will use an external API; OpenAI Luna–Low is selected, with live access and scoped missing-data/injected-text evaluation completed.
 
 The orchestrator invokes research and writing sequentially. The research agent requests approved MCP tools; the MCP service validates arguments and runs bounded, parameterized queries. The writer receives structured findings and source references rather than database access. The orchestrator owns the model API credentials.
 
 ## Next Three Implementation Steps
 
-1. Review the implemented `list_games` and `get_game_data` MCP tools and their verified boundaries in the [MCP review](mcp-review.md).
-2. Review and live-test the implemented research → writer handoff with OpenAI Luna–Low; fake-model tests pass, while model key/account access and live evaluation remain pending. See [model review](model-review.md).
-3. Test injection and failure cases, rehearse the local two-agent demo, and document remaining limits before future VM deployment.
+1. Review the completed [security/failure checks](security-failure-checks.md), including the sparse-data fix and remaining isolation limits.
+2. Build a basic React UI on a separate branch, retaining server-side model calls and the terminal fallback; UI work has not begun.
+3. Rehearse closer to the Monday afternoon presentation, reviewing the architecture and evidence trail; VM deployment remains afterward.
 
-For each step, explain the concept and its connection to familiar Java/MySQL work, try it, inspect the result, review the diff, and commit. CFBD is the selected data source. Python 3.13 is the selected language; OpenAI `gpt-6-luna` with low reasoning effort is selected; live account access and behavior remain unverified.
+For each step, explain the concept and its connection to familiar Java/MySQL work, try it, inspect the result, review the diff, and commit. CFBD is the selected data source. Python 3.13 is the selected language; OpenAI `gpt-6-luna` with low reasoning effort is selected; live access and initial scoped evaluations have passed.
 
 ## Selected Data Source
 
@@ -60,7 +60,7 @@ See the [checkpoint summary](checkpoint-summary.md) and [credential inventory/li
 - The importer passed all 14 offline tests plus real local MySQL loading, repeated-import ID/count stability, and controlled-failure rollback checks.
 - Docker Desktop and Compose run locally. MySQL 8.4.13 startup, administrator authentication, and loopback port binding were verified.
 - The four-table schema is applied. Representative unique-key, foreign-key, and CHECK tests passed; fixture rows were rolled back. Subsequent real imports loaded 15 teams, 14 games, and 28 statistics rows, with separate import-run history.
-- MCP account, locked view owner, and approved views are created; allowed view reads and denied private/base reads and writes passed. The import account has passed required write and denied-operation checks. Real imports and populated MCP view counts passed. MCP tools now pass real stdio discovery/call checks and all 26 offline tests pass. The research/writer implementation passes fake-model tests; live model behavior and generated output remain pending. The two-agent briefing is required for the demo.
+- MCP account, locked view owner, and approved views are created; allowed view reads and denied private/base reads and writes passed. The import account has passed required write and denied-operation checks. Real imports and populated MCP view counts passed. MCP tools now pass real stdio discovery/call checks and all 35 offline tests pass. The research/writer workflow has produced a live sourced sample; scoped live missing-statistics and injected-text checks passed. See [security/failure checks](security-failure-checks.md). The two-agent briefing is required for the demo.
 
 See [database checks](local-database-checks.md), [importer walkthrough](importer-review.md), and [permissions](permissions.md) for evidence and remaining checks.
 
@@ -74,7 +74,7 @@ The [schema](../db/schema-draft.sql) is applied to local MySQL 8.4.13. It is not
 | `seasons` | Deferred; season is currently stored on `games` |
 | `games` | Date, teams, scores, venue, and source references |
 | `team_game_stats` | A team's statistics for a game |
-| `notes` | Planned for the injection experiment; not created |
+| `notes` | Not created; injection evaluation used an in-memory venue-text overlay |
 | `ingestion_runs` | Source, retrieval time, response hash, importer version/dirty flag, counts, status, and failures |
 | `players` | Optional player identities |
 | `player_game_stats` | Optional individual game statistics |
@@ -182,4 +182,6 @@ Work in small steps: explain the change → try it → inspect the result → re
 
 ## Future Extensions
 
-Add S3 for original-data archives, a managed database for infrastructure practice, scheduled ingestion, additional sources, a UI, or a security-investigation workflow. Keep these outside the initial two-week scope.
+Add S3 for original-data archives, a managed database for infrastructure practice, scheduled ingestion, additional sources, a richer UI, or a security-investigation workflow. Keep these outside the initial two-week scope.
+
+The writer now accepts 1–6 cited claims, allowing a short briefing when statistics are unavailable. Citation-reference validation does not establish factual accuracy. Current verification: 35 offline tests plus the recorded live cases; the injection case is one observed attempt, not a general guarantee.

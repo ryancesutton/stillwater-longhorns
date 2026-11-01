@@ -28,7 +28,7 @@ Created `stillwater_mcp`@`%` and locked `stillwater_view_owner`@`localhost`. The
 
 `python scripts/check_mcp_permissions.py` authenticated as MCP over container-local TCP and successfully queried all three empty views. Ten denied operations returned privilege error 1142: reads of teams, games, team_game_stats, ingestion_runs and private_security_fixture; dataset insert/update/delete; view update; and CREATE TABLE. Post-check administrator reads confirmed the four dataset/run tables remained empty and the single harmless private fixture was unchanged.
 
-The added `private_security_fixture` table is only a harmless security-test fixture, not a new application feature. No import account was created in this step. At this checkpoint those runtime and integration checks remained pending; subsequent host import and populated view checks are recorded below. OS isolation, MCP tool validation, and agent behavior still remain pending.
+The added `private_security_fixture` table is only a harmless security-test fixture, not a new application feature. No import account was created in this step. At this checkpoint those runtime and integration checks remained pending; subsequent host import and populated view checks are recorded below. OS isolation remains deferred; subsequent MCP/model progress is linked below.
 
 ## Import Authorization Checkpoint
 
@@ -50,4 +50,4 @@ python scripts/import_data.py \
   data/raw/cfbd-team-stats-20261027T020832174803Z/response.json --write
 ```
 
-Earlier empty-table results describe their checkpoints; the four tables now contain imported data and run history. Empty-database schema/import grant fixture scripts must not be rerun on this populated database. MCP tools now pass live database/stdin-stdout integration checks. Runtime OS isolation, live model behavior, and remote deployment remain pending. See [model review](model-review.md) for fake-model tests.
+Earlier empty-table results describe their checkpoints; the four tables now contain imported data and run history. Empty-database schema/import grant fixture scripts must not be rerun on this populated database. MCP tools now pass live database/stdin-stdout integration checks. Runtime OS isolation and remote deployment remain deferred. Live model sample and scoped missing-data/injected-text results are now recorded in [model review](model-review.md) and [security/failure checks](security-failure-checks.md). Database grant checks were not rerun during the November 1 model evaluation.

@@ -39,6 +39,30 @@ class ToolTests(unittest.TestCase):
         connect.return_value.cursor.return_value.fetchall.return_value = []
         self.assertEqual(game_tools.get_game_data(123), {"status": "not_found", "source_game_id": 123})
 
+    @patch("game_tools.connect_mcp")
+    def test_empty_season_is_success_with_no_records(self, connect):
+        connect.return_value.cursor.return_value.fetchall.return_value = []
+        self.assertEqual(game_tools.list_games(2022),
+                         {"status": "ok", "games": [], "truncated": False})
+
+    @patch("game_tools.connect_mcp")
+    def test_missing_stat_rows_are_flagged(self, connect):
+        connect.return_value.cursor.return_value.fetchall.side_effect = [
+            [{"source_game_id": 123}], []]
+        result = game_tools.get_game_data(123)
+        self.assertTrue(result["missing_team_stats"])
+        self.assertEqual(result["team_stats"], [])
+
+    @patch("game_tools.connect_mcp")
+    def test_null_stat_remains_null(self, connect):
+        connect.return_value.cursor.return_value.fetchall.side_effect = [
+            [{"source_game_id": 123}],
+            [{"team": "Texas", "rushing_yards": None},
+             {"team": "Alabama", "rushing_yards": 107}]]
+        result = game_tools.get_game_data(123)
+        self.assertFalse(result["missing_team_stats"])
+        self.assertIsNone(result["team_stats"][0]["rushing_yards"])
+
     @patch("game_tools.connect_mcp", side_effect=RuntimeError("password=private"))
     def test_database_failure_is_sanitized(self, connect):
         self.assertEqual(game_tools.list_games(), {"status": "error", "code": "retrieval_unavailable"})

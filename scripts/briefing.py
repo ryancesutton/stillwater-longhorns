@@ -54,7 +54,8 @@ no tools. Every factual claim must cite its supplied evidence_ref. Do not invent
 statistics, citations, turning points, coaching explanations, or predictions.
 Title should only name the matchup, without unsupported claims. Mention material
 missing data and supplied scope limitations. Never describe missing data as zero.
-Return the required JSON with 2-6 short factual claims and limitations.
+Return the required JSON with 1-6 short factual claims and limitations.
+One supported claim is enough when data is sparse; never pad with invented facts.
 """
 
 
@@ -216,7 +217,7 @@ async def run_workflow(request, model, tools, audit):
     try:
         briefing = json.loads(output_text(response))
         Draft202012Validator(WRITER_SCHEMA).validate(briefing)
-        if not 2 <= len(briefing["claims"]) <= 6 or len(briefing["title"]) > 180:
+        if not 1 <= len(briefing["claims"]) <= 6 or len(briefing["title"]) > 180:
             raise ValueError()
         for claim in briefing["claims"]:
             if claim["evidence_ref"] not in evidence or not 1 <= len(claim["text"]) <= 600:

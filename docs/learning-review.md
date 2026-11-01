@@ -28,8 +28,16 @@ Use this as a standing learning plan for future project sessions. Start with one
 - Transaction boundaries: earlier team upserts also roll back if a later statistics write fails in the same transaction.
 - Parameterization: legitimate apostrophes stay intact; values are safe from becoming SQL syntax because they are bound, not because validation declared them valid. JDBC PreparedStatement is the familiar analogy.
 - Views: the SQL definition chooses exposed columns/query; the definer’s grants permit the underlying reads. Locking the definer prevents login, not view evaluation.
-- MCP client exists already for integration tests; the production orchestrator now also contains a client. No live model has participated yet.
+- MCP client exists already for integration tests; the production orchestrator now also contains a client. Live research/writer calls now participate; their access still comes from the application, not the model itself.
 - Stdio/TCP/serialization: keep the conceptual distinctions recognizable without requiring wire-format memorization.
 - Private file permissions distinguish OS users, not programs sharing the same user.
 
-After Saturday, slow down and trace one game end-to-end, then have the learner make and verify a small change. Understanding remains a separate goal from reaching the demo milestone.
+After the Monday demo, slow down and trace one game end-to-end, then have the learner make and verify a small change. Understanding remains a separate goal from reaching the demo milestone.
+
+## November 1 Review Notes
+
+- Ry correctly identified fixed tool queries and independent view grants as deletion barriers, and explained why missing yards must not become zero.
+- Revisit environment minimization versus OS isolation: withholding environment secrets does not block same-user file access.
+- A claim is one factual statement with an evidence reference. Our two-claim minimum was a presentation rule, not a security boundary; accepting one supported claim handles sparse data without padding. Empty output and unknown references still fail.
+- Ask Ry to distinguish deterministic code checks, live behavior observed in one fixture, and separately tested database enforcement. A passing injection attempt is not proof against all attacks.
+- Next milestone: basic React UI on a separate branch, then rehearsal near Monday afternoon. Continue one-question-at-a-time reviews.

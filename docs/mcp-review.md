@@ -14,13 +14,13 @@ Implemented two tools with the official MCP Python SDK 2.3.0. The server runs ov
 | `_query` and SQL constants | MCP connection, read-only transaction, parameter tuples, approved views only, two-second SELECT execution hints, sanitized database-failure response |
 | MySQL grants | Independently deny base/private reads, writes, and DDL; previously tested outside MCP |
 
-`get_game_data` returns a stable `cfbd:game:<source-id>` reference, source endpoints, response hashes, retrieval timestamps, result, and selected team statistics. SQL NULL remains JSON null. Missing games return `not_found`; empty seasons return an empty list; database failures return `retrieval_unavailable`. These statuses must be handled separately by the future orchestrator/writer.
+`get_game_data` returns a stable `cfbd:game:<source-id>` reference, source endpoints, response hashes, retrieval timestamps, result, and selected team statistics. SQL NULL remains JSON null. Missing games return `not_found`; empty seasons return an empty list; database failures return `retrieval_unavailable`. These statuses must be handled separately by the orchestrator/writer.
 
-The two-second limit is per SELECT, not a strict overall tool deadline. Connections have a ten-second connect timeout and thirty-second read/write timeouts; the integration client uses twenty seconds per request and a ninety-second whole-check timeout. Future orchestration needs its own call-count and total-time budgets.
+The two-second limit is per SELECT, not a strict overall tool deadline. Connections have a ten-second connect timeout and thirty-second read/write timeouts; the integration client uses twenty seconds per request and a ninety-second whole-check timeout. The implemented orchestrator adds call-count, payload, token and whole-workflow budgets.
 
 ## Verification
 
-The MCP checkpoint passed 18 offline tests; the full suite now passes 26 after adding model-boundary tests. Real host-to-container retrieval used only the MCP database identity. `python scripts/check_mcp_tools.py` launched an actual subprocess and used MCP discovery/calls over stdio to verify:
+The MCP checkpoint passed 18 offline tests; the full suite now passes 35 after adding model-boundary tests. Real host-to-container retrieval used only the MCP database identity. `python scripts/check_mcp_tools.py` launched an actual subprocess and used MCP discovery/calls over stdio to verify:
 
 - Exactly the two approved tools are exposed.
 - Fourteen Texas 2023 games are returned.
@@ -38,4 +38,4 @@ Direct dependencies are pinned in `requirements.txt`; `requirements-lock.txt` re
 
 ## Remaining
 
-Orchestrator tool allowlisting, Luna–Low selection, separate research/writer contexts, sanitized audit events and usage budgets are implemented with fake-model tests. Live model behavior, injected-note evaluation and rehearsal remain pending; see [model review](model-review.md). Database-error sanitization and MCP request validation do not substitute for those checks. No accounts, tables, or grants were modified for this milestone.
+Orchestrator tool allowlisting, Luna–Low selection, separate research/writer contexts, sanitized audit events and usage budgets are implemented with fake-model tests. A live sample and scoped missing-statistics/injected venue-text evaluations passed; rehearsal remains pending. See [model review](model-review.md) and [security/failure checks](security-failure-checks.md). Database-error sanitization and MCP request validation do not substitute for those checks. No accounts, tables, or grants were modified for this milestone.

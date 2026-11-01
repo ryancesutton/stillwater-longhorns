@@ -6,7 +6,7 @@ No secret values belong in this document. Paths below are relative to the reposi
 |---|---|---|
 | MySQL `root` | `secrets/mysql-root-password` | Local schema/account administration through `db-admin.sh` |
 | MySQL `stillwater_import` | `secrets/mysql-import-password` | Offline importer and local integration checks |
-| MySQL `stillwater_mcp` | `secrets/mysql-mcp-password` | Future MCP service; current permission checks |
+| MySQL `stillwater_mcp` | `secrets/mysql-mcp-password` | MCP service and permission checks |
 | MySQL `stillwater_view_owner` | None; locked against login | Definer privileges for the three approved views |
 | OpenAI model API | `secrets/openai-api-key` | Orchestrator authentication only; never MCP environment or prompt content |
 | CFBD | `secrets/cfbd-api-key` | Source retrieval scripts only |

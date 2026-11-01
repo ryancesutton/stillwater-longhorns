@@ -21,4 +21,4 @@ The supplied scope includes selected team statistics only; it does not include p
 - Codex compared the generated score, venue, season, yardage, turnover/interception and third-down claims with the retrieved evidence; they matched.
 - The sample references a game-level evidence bundle containing separate result/stat source provenance. Current citation validation checks reference existence, not automatic claim entailment.
 
-No private credential values or raw response archives are included here. Missing-data behavior, live prompt injection, repeatability across representative requests, and demo presentation still need evaluation.
+No private credential values or raw response archives are included here. Subsequent scoped missing-statistics and live injected-text evaluations are recorded in [security/failure checks](security-failure-checks.md). Broader repeatability and demo presentation still need evaluation.

@@ -8,7 +8,7 @@ This is the first project in **Project Stillwater**, a collection of hands-on pr
 
 **Local data preparation and database schema are working.** CFBD source checks and offline normalization passed. MySQL 8.4.13 runs in Docker locally, with the four-table schema applied and representative database constraints verified. Real imports now contain 15 teams, 14 games, and 28 team-game statistics rows; repeated imports retained counts and IDs, and a controlled-failure rollback restored the dataset.
 
-The importer has passed offline tests and local MySQL integration. The two bounded MCP tools are implemented and verified over stdio; the research/writer implementation passes fake-model tests, while live model behavior and a generated briefing remain pending. The import identity has passed required write and denied-operation checks. MCP read-only views/grants are implemented and their allowed/denied checks passed, including populated view counts after import. The two-agent briefing is required for the Saturday demo. See [local database checks](docs/local-database-checks.md) and the [importer review](docs/importer-review.md).
+The importer has passed offline tests and local MySQL integration. The two bounded MCP tools are implemented and verified over stdio; the research/writer workflow has produced a verified live sample and passed the scoped missing-statistics and injected-text evaluations. The import identity has passed required write and denied-operation checks. MCP read-only views/grants are implemented and their allowed/denied checks passed, including populated view counts after import. The two-agent briefing is required for the Monday afternoon demo. See [local database checks](docs/local-database-checks.md) and the [importer review](docs/importer-review.md).
 
 ## Project Goal
 
@@ -42,9 +42,9 @@ flowchart TD
     MCP --> Logs
 ```
 
-The Saturday demo will run locally on the developer’s Mac. MySQL is the selected database: the current instance is MySQL 8.4.13 in Docker, with persistent storage in the Compose `mysql_data` volume and a published port restricted to `127.0.0.1:3307`. Local Python code will connect through that port. The older host MySQL 5.7 installation is untouched.
+The Monday afternoon demo will run locally on the developer’s Mac. MySQL is the selected database: the current instance is MySQL 8.4.13 in Docker, with persistent storage in the Compose `mysql_data` volume and a published port restricted to `127.0.0.1:3307`. Local Python code will connect through that port. The older host MySQL 5.7 installation is untouched.
 
-After the demo, deployment is planned to the friend’s Linux VMs, with the app and MySQL together on the new VM as the preferred arrangement. VM availability, capacity, final topology, and permissions for application installs remain unconfirmed. MySQL setup on the new VM is authorized. Remote access is planned through Tailscale/SSH with MagicDNS; no remote setup has occurred. OpenAI `gpt-6-luna` with low reasoning effort is selected; live API access is not yet verified.
+After the demo, deployment is planned to the friend’s Linux VMs, with the app and MySQL together on the new VM as the preferred arrangement. VM availability, capacity, final topology, and permissions for application installs remain unconfirmed. MySQL setup on the new VM is authorized. Remote access is planned through Tailscale/SSH with MagicDNS; no remote setup has occurred. OpenAI `gpt-6-luna` with low reasoning effort is selected; live API access is verified.
 The planned research agent will retrieve structured evidence through `list_games` and `get_game_data`. The writer will receive that evidence and its source references without database or retrieval-tool access. The orchestrator will control the handoff, timeouts, and usage limits.
 
 ## Data Plan
@@ -66,7 +66,7 @@ Keep original imports in a private local directory excluded from Git. Link norma
 - Treat retrieved notes as untrusted data.
 - Record sanitized audit events, errors, timing, and model usage without exposing secrets in prompts or logs.
 
-A controlled prompt-injection experiment in a harmless game note will test agent behavior. Separate database checks will verify that authorized reads succeed, private-table reads fail, and dataset writes fail under the MCP identity. Missing-data and repeated-import checks will verify application behavior and data integrity.
+A controlled live prompt-injection experiment in an in-memory copy of venue text passed one observed attempt. Live missing-statistics evaluation also passed after a sparse-data validation fix. Separate database checks previously verified authorized reads and denied private/base-table reads and writes. Repeated imports retained dataset identities and counts. These scoped checks do not constitute a complete security audit; see [security/failure results](docs/security-failure-checks.md).
 
 Database identities enforce database privileges, but services on one machine still share host-level risks. Separate operating-system users or containers may improve isolation; the implementation will document the limits of the chosen setup.
 
@@ -97,7 +97,7 @@ Design references: [schema draft](db/schema-draft.sql), [permission plan](docs/p
 
 See the [project outline](docs/project-outline.md) for the detailed plan, security boundaries, learning approach, and next three implementation steps.
 
-Python 3.13 is selected for implementation. Local setup has been verified with Python 3.13.16 on an Intel Mac. CFBD is the selected football data source. OpenAI `gpt-6-luna` with low reasoning effort is selected for initial evaluation; account access and live behavior remain unverified. Local MySQL startup, administrator authentication, and schema checks have passed; MCP account checks passed; import-account authorization checks also passed.
+Python 3.13 is selected for implementation. Local setup has been verified with Python 3.13.16 on an Intel Mac. CFBD is the selected football data source. OpenAI `gpt-6-luna` with low reasoning effort is selected for initial evaluation; live access and the initial scoped evaluations have passed. Local MySQL startup, administrator authentication, and schema checks have passed; MCP account checks passed; import-account authorization checks also passed.
 
 From the repository root, create and activate a project-specific virtual environment:
 
@@ -120,10 +120,12 @@ python -c "import sys; print(sys.executable); print('Stillwater is ready')"
 
 The executable path should point inside `.venv/`. The environment and generated Python bytecode are excluded from Git; dependencies will be declared separately so the environment can be recreated. Run `deactivate` to leave the environment.
 
-The research → writer implementation passes fake-model tests, including real local MCP/database retrieval; live model integration and quality checks remain pending. See the [model review](docs/model-review.md) before enabling paid calls. See the [MCP review](docs/mcp-review.md) for implemented guardrails and test results. See the [checkpoint summary](docs/checkpoint-summary.md) and [credential inventory](docs/credentials.md).
+The research → writer implementation passes offline tests and real MCP/database integration; a live sample and scoped missing-data/injected-text cases passed. See the [sample briefing](docs/sample-briefing.md) and [security/failure results](docs/security-failure-checks.md). See the [model review](docs/model-review.md) before enabling paid calls. See the [MCP review](docs/mcp-review.md) for implemented guardrails and test results. See the [checkpoint summary](docs/checkpoint-summary.md) and [credential inventory](docs/credentials.md).
 
 ## Learning Notes
 
 This repository will document architectural decisions, security-check results, and lessons learned. AI coding tools will assist development; changes will be reviewed and verified as part of the learning process.
 
 Work in small steps: explain → try → inspect → review the diff → commit. Connect new concepts to familiar Java/MySQL work and verify both expected behavior and relevant failures.
+
+A basic React UI is planned on a separate branch, with the terminal workflow retained as a fallback. It is not implemented yet; rehearsal follows UI work closer to the Monday afternoon presentation.
