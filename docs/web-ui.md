@@ -42,7 +42,7 @@ The full suite passes 41 tests. Six HTTP tests use real local sockets with fake 
 
 Live HTTP integration passed: the page was served, 14 games were read from local MySQL, and one selected Alabama game generated a sourced briefing through HTTP → existing orchestrator → real MCP → MySQL → writer. The run used four model requests and 8,246 reported tokens. Codex compared the displayed claim text with the returned result, yardage, and turnover values; they matched. The temporary live verification server was closed afterward.
 
-Automated browser inspection was unavailable because no browser was connected. Ry manually reviewed the page and approved its initial appearance. Responsive layout, keyboard behavior, updated alias interaction, and a user-confirmed live browser generation still need explicit review; HTTP integration is not browser automation. The preview can be reviewed without incurring API usage.
+Automated browser inspection was unavailable because no browser was connected. Ry manually reviewed the page and approved its initial appearance. Ry subsequently reported testing generated briefings and approved the richer output. Systematic responsive-layout, keyboard and browser-error-path checks remain unverified; HTTP integration is not browser automation. The preview can be reviewed without incurring API usage.
 
 Rehearsal remains scheduled after UI review, closer to Monday afternoon's presentation. VM deployment is unchanged and deferred.
 
@@ -65,7 +65,7 @@ The optional developer check `node tests/test_game_search.js` passed six matchin
 | Refresh restored the prior scroll position | Disabled browser scroll restoration and reset to the top on page show; results actions still scroll |
 | Wanted natural ways to identify a game | Added a search-style field, retained dropdown fallback, and matched opponent names or season ordinals against loaded records |
 | Wanted BYU/full-name and OSU-style inputs | Added a reviewed local alias catalog with primary-source references and ambiguity checks; no runtime web access |
-| Requested preparation for browser live generation | Server was switched to explicit live mode; startup/config/game-list checks made no paid calls. A user-confirmed browser generation has not been reported |
+| Requested preparation for browser live generation | Server was switched to explicit live mode; startup/config/game-list checks made no paid calls. Later manual generation feedback is recorded below |
 
 Aliases are loaded from `/api/team-aliases`; only the selected source game ID is sent to the generation endpoint. See [alias research and maintenance](team-aliases.md). All 14 imported opponents have reviewed name variants; the catalog also records Ohio/Oregon State as OSU ambiguity candidates without importing their data. The search checks periods, case, spacing, full-name context, overlapping names, and collisions. Bare UW is ambiguous in the current dataset and asks for a full name or game number. No model calls are needed for alias resolution.
 
@@ -85,4 +85,14 @@ Nickname handling uses the same local resolver and server-validated game-ID endp
 
 ## Demo feature checkpoint
 
-Ry considers this feature set sufficient for the demo. Pause feature additions. Next session: intensive architecture/code/security review, a step-by-step demo script with fallback paths, and a few readable Mermaid diagrams for the mentor. The demonstration remains local; rehearsal should be close to the Monday afternoon presentation. No final rehearsal or user-confirmed live browser-generation result is implied by visual approval.
+Ry considers this feature set sufficient for the demo. Pause feature additions. The intensive live-path review has been completed, and diagrams plus a presenter outline are prepared. Next is an abbreviated review and rehearsal. The demonstration remains local; rehearsal should be close to the Monday afternoon presentation. Visual approval alone is not full browser test coverage; final rehearsal remains.
+
+The [glass-to-metal review](glass-to-metal-review.md) now includes Mermaid diagrams for live generation, prior ingestion/provenance, and trust/permission boundaries, plus a component-by-component code/guardrail table. The live path makes the model proposal → application validation → MCP execution → application evidence handoff explicit.
+
+The [demo presenter outline](demo-outline.md) provides a short product demo followed by high-level glass-to-metal talking points, guardrails, limitations, and fallback cues. It is an outline, not a word-for-word speech; rehearsal remains to be completed.
+
+## Briefing Detail Feedback
+
+Ry reported that generated briefings omitted many available statistics. Updated writer instructions now prefer broader comparisons across 5–6 claims when supported: offense, turnovers, conversions, first downs/possession and penalties alongside the game result. The model can still return fewer claims for sparse data; the maximum remains six. No new UI controls, permissions, data fields, or model tools were added. The saved October 30 sample is unchanged; newly generated briefings use the current instructions after server restart. See [evaluation and limits](model-review.md#richer-statistical-coverage).
+
+Ry reported the richer briefing was better after the prompt update. The generation server was restarted to load the instructions. The prior saved sample stays unchanged and remains labeled historical. No automated browser was available, so this manual feedback should not be described as automated end-to-end browser coverage.

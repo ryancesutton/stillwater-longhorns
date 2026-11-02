@@ -20,7 +20,7 @@ The two-second limit is per SELECT, not a strict overall tool deadline. Connecti
 
 ## Verification
 
-The MCP checkpoint passed 18 offline tests; the full suite now passes 35 after adding model-boundary tests. Real host-to-container retrieval used only the MCP database identity. `python scripts/check_mcp_tools.py` launched an actual subprocess and used MCP discovery/calls over stdio to verify:
+The MCP checkpoint passed 18 offline tests; the current full suite passes 41 after model-boundary and HTTP tests. Real host-to-container retrieval used only the MCP database identity. `python scripts/check_mcp_tools.py` launched an actual subprocess and used MCP discovery/calls over stdio to verify:
 
 - Exactly the two approved tools are exposed.
 - Fourteen Texas 2023 games are returned.

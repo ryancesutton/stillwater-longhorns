@@ -79,3 +79,7 @@ Timeout cancellation cannot guarantee an already-sent provider request stops or 
 ## Subsequent UI Checks
 
 The local web interface adds HTTP request boundaries without changing database grants or MCP tools. The suite now passes 41 Python tests, including six HTTP tests; separate search checks cover aliases, context, and ambiguity without paid requests. See [web UI verification and limitations](web-ui.md) and [alias sources/tests](team-aliases.md). Browser visual feedback from Ry is recorded separately from HTTP tests; no automated browser was connected.
+
+## Subsequent Writer Detail Revision
+
+The latest writer instructions request broader statistical coverage without changing validators or permissions. One live Alabama run produced five detailed claims manually checked against retrieved evidence: four model requests, 8,684 reported tokens. All 41 tests passed after the revision. The earlier live injection/missing-statistics results describe the preceding prompt, not a fresh live security regression of this revision. See [model review](model-review.md#richer-statistical-coverage).

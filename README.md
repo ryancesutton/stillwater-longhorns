@@ -128,12 +128,16 @@ This repository will document architectural decisions, security-check results, a
 
 Work in small steps: explain → try → inspect → review the diff → commit. Connect new concepts to familiar Java/MySQL work and verify both expected behavior and relevant failures.
 
-A small Python-served web UI is implemented on `feature/local-web-ui`, with the terminal workflow retained as a fallback. Browser review comes next; rehearsal follows closer to the Monday afternoon presentation.
+A small Python-served web UI is implemented on `feature/local-web-ui`, with the terminal workflow retained as a fallback. Ry has reviewed the UI and requested interaction refinements; abbreviated review and rehearsal are next before the Monday afternoon presentation.
 
 ## Local Browser Demo
 
-Run `python scripts/web_app.py` and open http://127.0.0.1:8000 for a preview and saved sample. Restart with `--live` to enable paid generation from the button. The implementation uses Python plus plain HTML/CSS/JavaScript; no React or Node setup. See [web UI setup and security boundaries](docs/web-ui.md). Browser visual review remains pending.
+Run `python scripts/web_app.py` and open http://127.0.0.1:8000 for a preview and saved sample. Restart with `--live` to enable paid generation from the button. The implementation uses Python plus plain HTML/CSS/JavaScript; no React or Node setup. See [web UI setup and security boundaries](docs/web-ui.md). Initial manual UI review is complete; automated browser, responsive-layout and systematic keyboard checks remain unverified.
 
 The browser search accepts reviewed opponent aliases and season game numbers, with clarification for ambiguous inputs such as UW. No runtime internet search is used. See [UI behavior, review history, and security](docs/web-ui.md) and the [sourced alias catalog](docs/team-aliases.md).
 
 Reviewed aliases now include team nicknames such as Cougs and Cowpokes. Shared labels (Cowboys, Pokes, Cougars) require clarification; see the [catalog and collision rules](docs/team-aliases.md).
+
+For a component-by-component walkthrough with Mermaid diagrams, code links, security boundaries and evidence limits, see the [glass-to-metal architecture review](docs/glass-to-metal-review.md).
+
+The writer now prefers broader statistical coverage when available, while preserving the 1–6 claim limit and sparse-data handling. A live Alabama check produced five evidence-matching claims (four requests, 8,684 reported tokens); Ry reported the richer output was better. See the [presenter outline](docs/demo-outline.md) for a roughly 3–4 minute explanation after the product demo.

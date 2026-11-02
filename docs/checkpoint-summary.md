@@ -25,7 +25,7 @@ MCP database access is restricted to three views. Its own authenticated queries 
 
 ## Evidence and Limits
 
-All 35 offline tests now pass; dependency consistency and whitespace checks passed. Live MySQL checks are recorded in [local-database-checks.md](local-database-checks.md). This is not a complete security audit or dependency vulnerability scan. Network-loss recovery remains simulated, and schema constraints were sampled rather than exhaustively tested.
+All 41 offline tests now pass; dependency consistency and whitespace checks passed. Live MySQL checks are recorded in [local-database-checks.md](local-database-checks.md). This is not a complete security audit or dependency vulnerability scan. Network-loss recovery remains simulated, and schema constraints were sampled rather than exhaustively tested.
 
 Source accuracy checks cover the schedule and selected box-score fields, not every statistic. Return statistics are excluded after a documented discrepancy. Credentials are private plaintext files accessible to the host user; OS isolation and secret recovery are not implemented/tested. See [credential inventory](credentials.md).
 
@@ -39,8 +39,14 @@ The initial Python-served web UI is implemented on `feature/local-web-ui`, retai
 
 Use [learning-review.md](learning-review.md) for periodic whole-project checks. Continue explaining security changes before implementation and pointing to their code. Review both permitted and denied cases, and use short recall questions to check understanding.
 
-UI follow-up: Ry approved the initial appearance. Longhorns replaced visible Stillwater branding; scrolling now occurs on generation/results or saved-sample actions, not dropdown selection. Bounded query parsing supports season game order and opponent names, now including sourced aliases with ambiguity handling. No new dependencies, database grants, model tools, or runtime web access were added. See [UI review history and security](web-ui.md) and [alias research](team-aliases.md). Browser verification of updated aliases and a user-confirmed live browser generation remain pending.
+UI follow-up: Ry approved the initial appearance. Longhorns replaced visible Stillwater branding; scrolling now occurs on generation/results or saved-sample actions, not dropdown selection. Bounded query parsing supports season game order and opponent names, now including sourced aliases with ambiguity handling. No new dependencies, database grants, model tools, or runtime web access were added. See [UI review history and security](web-ui.md) and [alias research](team-aliases.md). Ry has since reported testing generated briefings and approved richer output; automated browser and systematic responsive/keyboard verification remain unverified.
 
 The demo search now supports sourced mascot/team-nickname variants, with 102 query checks plus an input-order assertion passing. Cowboys/Pokes/Cougars remain ambiguous in the actual imported season. Cougs and Coogs are distinct reviewed spellings; broader coverage requires collision review. Python suite remains 41 tests. See [UI behavior](web-ui.md) and [alias sources](team-aliases.md).
 
-Ry has approved the current UI feature set as sufficient for the demo. Refresh now starts at the top; selecting a game stays in place. Next session starts with intensive review, a demo script including fallback behavior, and a few clear Mermaid diagrams for the mentor. Keep feature scope fixed while preparing the presentation. UI work is on `feature/local-web-ui`; main retains the previous terminal checkpoint until an explicit merge.
+Ry has approved the current UI feature set as sufficient for the demo. Refresh now starts at the top; selecting a game stays in place. The intensive live-path review is complete; a presenter outline and three Mermaid diagrams are prepared. Next is abbreviated review and rehearsal. Keep feature scope fixed while preparing the presentation. UI work is on `feature/local-web-ui`; main retains the previous terminal checkpoint until an explicit merge.
+
+## Latest Checkpoint
+
+The writer now prefers broader use of supplied statistics across 5–6 claims, without changing the 1–6 validator, tool access, grants, schema or usage budgets. A live Alabama evaluation produced five claims whose figures matched the retrieved evidence, using four requests and 8,684 reported tokens. The 41-test suite passed after the prompt revision. Earlier live injection and missing-stat fixtures were not rerun for this revision. Ry reported the output improved.
+
+The [glass-to-metal review](glass-to-metal-review.md) and [demo outline](demo-outline.md) are prepared. Repeat a short walkthrough, then rehearse near the presentation. Same-user secret-file access, no public/user-authenticated deployment, sampled factual evaluation, and no hard dollar cap remain explicit limits. Main has not been merged with the UI feature branch.

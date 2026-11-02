@@ -19,7 +19,7 @@ Live calls send the bounded user request, instructions, tool schemas, selected g
 
 ## Verification So Far
 
-All 35 offline tests pass, including unknown/invalid calls never dispatching, separate writer context without tools, unknown citations failing, missing evidence stopping before writing, incomplete/over-budget output stopping, timeout behavior, rejected audit fields, fake-secret markers excluded from payloads/logs, and the SDK child's effective environment.
+The current 41-test offline suite passes, including unknown/invalid calls never dispatching, separate writer context without tools, unknown citations failing, missing evidence stopping before writing, incomplete/over-budget output stopping, timeout behavior, rejected audit fields, fake-secret markers excluded from payloads/logs, and the SDK child's effective environment.
 
 `python scripts/check_briefing_offline.py` also passes fake-model orchestration through the real stdio MCP server and read-only MySQL. Its model is scripted; it does not establish model quality or injection resistance. Live model evaluation is recorded separately below; scripted tests do not establish model behavior.
 
@@ -27,7 +27,7 @@ All 35 offline tests pass, including unknown/invalid calls never dispatching, se
 
 1. Review the [security/failure results](security-failure-checks.md) and [sample briefing](sample-briefing.md).
 2. Keep the API key in the ignored owner-only file; setup is complete. `store_model_key.py` remains available for fresh setups and refuses overwrite.
-3. Build the small Python-served web UI on a separate branch; keep API calls server-side and retain the terminal fallback.
+3. The small Python-served web UI is implemented on its separate branch. Continue abbreviated review and rehearsal; keep API calls server-side and retain the terminal fallback.
 4. `python scripts/briefing.py` remains inert by default; `--live` explicitly enables paid calls. `scripts/check_briefing_live.py --live` runs the scoped evaluation fixtures, with optional `--case` selection. Production audit logs remain metadata only.
 5. Rehearse closer to the Monday afternoon presentation; broader accuracy/injection evaluation remains future hardening.
 
@@ -41,8 +41,16 @@ The local audit contained only approved metadata fields and a completed outcome;
 
 ## November 1 Security Evaluation
 
-Live missing-statistics and injected venue-text checks passed in scoped runs. A diagnostic run found that requiring two claims rejected a valid one-claim result briefing. Writer instructions and validation now permit 1–6 claims; a regression test also verifies zero claims remain rejected. The complete suite passes 35 tests. See [security/failure checks](security-failure-checks.md) for fixtures, stopped runs, manual review, usage and limitations. No database records or raw imports were changed.
+Live missing-statistics and injected venue-text checks passed in scoped runs. A diagnostic run found that requiring two claims rejected a valid one-claim result briefing. Writer instructions and validation now permit 1–6 claims; a regression test also verifies zero claims remain rejected. At that checkpoint the suite passed 35 tests; the subsequent UI suite passes 41. See [security/failure checks](security-failure-checks.md) for fixtures, stopped runs, manual review, usage and limitations. No database records or raw imports were changed.
 
 ## Browser Interface Boundary
 
 The UI wraps the same sequential model workflow. Opponent aliases and season-order requests are resolved locally against imported games using reviewed configuration; only a game ID reaches the generation endpoint. Python validates that ID and constructs the bounded model request. No internet-search tool, model-generated alias mapping, or automatic alias persistence was added. See [UI security and review history](web-ui.md). The live HTTP integration used four requests and 8,246 reported tokens; this is separate from the earlier 16-request security evaluation.
+
+## Richer Statistical Coverage
+
+After Ry reported that briefings used too few available statistics, the writer instructions were expanded. With substantial statistics for both teams, the preference is 5–6 substantive claims covering the result, offensive production, turnovers, conversions, possession/first downs, and penalties, roughly 130–220 words across claims. Related comparisons can share a claim. These are guidance targets, not enforced minimum coverage or word counts; sparse data can still produce one supported claim. The 1–6 claim validator, field projection, citation checks, tool permissions, and budgets are unchanged.
+
+One live Alabama evaluation produced five claims covering the score/context, both teams' total/passing/rushing yards, passing completions/attempts, rushing attempts, turnovers/interceptions/fumbles, third/fourth downs, first downs, possession and penalties. Codex manually compared these values with the returned evidence; they matched, including conversion of possession seconds to minutes/seconds. Four model requests reported 8,684 tokens. The complete 41-test suite passed after the prompt change, including deterministic sparse-evidence checks. The live missing-statistics/injection cases recorded earlier were run before this prompt revision, not repeated for this checkpoint; this single richer-output evaluation is not a comprehensive quality/security regression.
+
+The ignored owner-only `outputs/detailed-briefing-evaluation.json` stores the evaluation result/evidence locally, not credentials. This evaluation used a temporary audit file rather than retaining a production audit log; its usage and review are recorded here. The October 30 saved browser sample remains historical and unchanged. Prompt design reference: [official OpenAI prompting guidance](https://developers.openai.com/api/docs/guides/prompt-engineering).

@@ -1,6 +1,6 @@
 # Permission Plan
 
-Status: local MCP database authorization is implemented and tested. `stillwater_mcp` can SELECT three approved views only. The locked `stillwater_view_owner` defines those views. The import identity is also created with its required writes and denied operations tested. The stdio MCP service is implemented and tested; agent/OS isolation remains pending. See the [MCP review](mcp-review.md). See [database checks](local-database-checks.md). Treat the new VM as unavailable until the project owner explicitly reports it ready.
+Status: local MCP database authorization is implemented and tested. `stillwater_mcp` can SELECT three approved views only. The locked `stillwater_view_owner` defines those views. The import identity is also created with its required writes and denied operations tested. The stdio MCP service is implemented and tested; runtime OS isolation remains deferred. See the [MCP review](mcp-review.md). See [database checks](local-database-checks.md). Treat the new VM as unavailable until the project owner explicitly reports it ready.
 
 ## Identities and Privileges
 
@@ -57,7 +57,7 @@ Run against harmless fixtures in the project database, with the actual intended 
 | Note contains an injected request for private data | Observe agent response separately; tool capabilities and database grants remain restricted |
 | Runtime attempts to read import/admin secret files | Denied by OS/container isolation once configured |
 
-Also test rollback on failed imports and missing-data responses. Agent refusal is a behavioral result; database denial is enforcement evidence. Neither substitutes for the other. All remote checks remain pending.
+Rollback and missing-data checks were subsequently tested; see [database checks](local-database-checks.md) and [security/failure checks](security-failure-checks.md). Agent refusal is a behavioral result; database denial is enforcement evidence. Neither substitutes for the other. All remote checks remain pending.
 
 ## Local MCP Account Details
 
