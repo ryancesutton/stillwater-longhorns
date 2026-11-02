@@ -66,3 +66,9 @@ Nickname review: distinguish a school identity from its nickname and mascot char
 Completed a step-by-step live-generation walkthrough. Ry correctly explained server-side dataset membership checks, independent tool validation, restricted MCP identity, parameterized-query protection, tool results becoming model input, evidence-only writer context, and citation linkage versus correctness. Revisit the model → orchestrator → MCP trigger and multi-turn API calls in the next abbreviated pass. Runtime token lifecycle and authentication/authorization distinctions were explained with code.
 
 The writer now requests broader use of available statistics; this changes output guidance rather than tool/database access. Ry reported the result was better. Preserve sparse-data behavior and distinguish the latest richer-output sample from earlier live security fixtures when discussing test evidence.
+
+## Abbreviated Review and Guided Rehearsal
+
+Completed another one-question-at-a-time pass and guided verbal rehearsal. Suggested phrasing is compiled in [demo-study-script.md](demo-study-script.md). Continue refining citation linkage versus approved source identity, SELECT grants versus view definitions, and repeated research API turns versus local MCP calls. Ry identified same-user secret access as the main OS-isolation limitation; remember that MySQL itself is already containerized, and containerization must be configured to provide the intended isolation.
+
+Ry's post-demo priority is VM deployment and its security review, then exploration of live web-assisted alias checks, with further features deferred. This does not enable runtime web access or establish VM readiness. A continuous timed/browser rehearsal remains unverified.

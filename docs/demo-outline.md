@@ -1,5 +1,7 @@
 # Demo Presenter Outline
 
+For suggested full phrasing compiled during rehearsal, see the [study script](demo-study-script.md). Keep this outline as the shorter presentation aid.
+
 Target: a brief product demonstration followed by roughly 3–4 minutes of explanation. These are cues, not a speech. Follow Texas–Alabama throughout. Live generation time varies; do not promise a fixed response time.
 
 ## Before presenting
@@ -58,7 +60,7 @@ Target: a brief product demonstration followed by roughly 3–4 minutes of expla
 - **Evidence:** 41 Python tests, 102 search cases, real MCP/database integration, separately tested denied database operations, and scoped live missing-data/injection cases.
 - Injection checks observe model behavior; database checks establish tested authorization. Neither guarantees every future attack fails.
 - **Current limits:** same-OS-user secret-file access, no user authentication, sampled factual evaluation, local demonstration server. Token budgets are not a hard dollar cap.
-- **Next:** stronger credential isolation, broader evaluations, and factual checks; VM deployment after the demo and permission review.
+- **Next:** VM deployment with its security review and isolation/access decisions, then exploration of live web-assisted alias checks. Further features remain deferred; broader evaluations and factual checks remain hardening work. No runtime web tools are currently enabled.
 - Collaboration: Codex assisted planning, implementation, and review; Ry directed scope and reviewed behavior and concepts.
 
 ## If something fails
@@ -81,4 +83,4 @@ Return to this route if you lose your place:
 
 **Browser → server checks → research/tool loop → MySQL → application evidence handoff → writer → output checks → browser.**
 
-Preparation status: the outline and architecture diagrams are drafted, and the interactive live-path review is complete. Next is abbreviated review and actual rehearsal. Latest richer-output live check used four model requests and 8,684 reported tokens; it does not replace the earlier separate security evaluations.
+Preparation status: intensive and abbreviated live-path reviews plus a guided verbal rehearsal have been completed. Suggested wording is compiled in the study script; a continuous timed/browser rehearsal remains separate. Latest richer-output live check used four model requests and 8,684 reported tokens; it does not replace the earlier separate security evaluations.
