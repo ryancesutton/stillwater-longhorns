@@ -128,7 +128,7 @@ This repository will document architectural decisions, security-check results, a
 
 Work in small steps: explain → try → inspect → review the diff → commit. Connect new concepts to familiar Java/MySQL work and verify both expected behavior and relevant failures.
 
-A small Python-served web UI is implemented on `feature/local-web-ui`, with the terminal workflow retained as a fallback. Ry has reviewed the UI and requested interaction refinements; abbreviated review and rehearsal are next before the Monday afternoon presentation.
+The working Python-served web UI and terminal fallback are merged into `main`. The demo and guided review are complete; future improvements should use new branches from `main`. See the [post-demo learning plan](docs/post-demo-learning-plan.md) for proposed next steps.
 
 ## Local Browser Demo
 
