@@ -1,5 +1,9 @@
 # Checkpoint: Local Data and Database Boundaries
 
+## Post-Demo Plan for Review
+
+See the [post-demo learning and security engineering plan](post-demo-learning-plan.md), prepared November 2, 2026. Proposed next step: targeted review, a one-page threat model, and a small denial test with Ry implementing the change. Initial consolidation estimate is 5–8 review hours plus 4–6 hands-on hours, adjusted by demonstrated understanding. Follow with process/credential isolation, web/API fundamentals, vulnerability management, detection and recovery; later introduce S3/IAM and web-assisted alias checks with explicit scope and permissions. Deployment remains conditional on VM answers. The plan is not yet implemented; older sections below retain historical demo checkpoints.
+
 ## Working Today
 
 The local workflow can retrieve CFBD data, preserve original responses and metadata, normalize Texas 2023 records, and load MySQL using a restricted import identity. The database contains 15 teams, 14 games, and 28 team-game statistics rows. MySQL 8.4.13 runs in Docker with persistent storage and its host port bound only to `127.0.0.1:3307`.
