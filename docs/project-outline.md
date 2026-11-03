@@ -11,7 +11,7 @@ Use a data-first approach: ingest historical data from CollegeFootballData (CFBD
 - Run the Monday afternoon demo locally on the Mac. MySQL is selected and currently runs as MySQL 8.4.13 in Docker; the Python application will run locally.
 - Deploy to the friend’s Linux VMs after the demo, preferring app and MySQL together on the new VM. The new VM is unavailable until the project owner reports otherwise. MySQL installation there is authorized; final topology, capacity, access, and other installation permissions remain pending. Existing SSH access is to the original VM, not proof that the new VM is ready. These are not EC2 instances.
 - Use MySQL as the primary datastore. S3, Athena, RDS, and cross-account AWS access are deferred.
-- Retain the terminal workflow as a fallback; try a basic React UI on a separate branch before rehearsal. Use a fixed research → writing workflow.
+- Retain the terminal workflow as a fallback; review the small Python-served web UI on its separate branch before rehearsal. Use a fixed research → writing workflow.
 - Preserve original imports in a private local directory; store normalized records and source metadata in MySQL.
 - Use CollegeFootballData (CFBD) as the single data source with a few bounded MCP tools. Defer live updates, scraping, a dashboard, and infrastructure-changing agents.
 - Use VS Code for reading, editing, debugging, and reviewing changes; use its local terminal for Git, imports, and verification. Remote–SSH is deferred unless the VM becomes the deployment target and installation permission is confirmed.
@@ -41,9 +41,9 @@ The orchestrator invokes research and writing sequentially. The research agent r
 
 ## Next Three Implementation Steps
 
-1. Review the completed [security/failure checks](security-failure-checks.md), including the sparse-data fix and remaining isolation limits.
-2. Build a basic React UI on a separate branch, retaining server-side model calls and the terminal fallback; UI work has not begun.
-3. Rehearse closer to the Monday afternoon presentation, reviewing the architecture and evidence trail; VM deployment remains afterward.
+1. Repeat an abbreviated glass-to-metal walkthrough, focusing on model proposals versus application execution, evidence handoff, and independent permissions. See [architecture review](glass-to-metal-review.md).
+2. Rehearse the short product demo and [presenter outline](demo-outline.md), including the labeled saved-sample fallback and remaining factual/security limits.
+3. Keep the working feature branch stable for Monday afternoon; VM deployment, stronger OS isolation and broader evaluations remain post-demo work.
 
 For each step, explain the concept and its connection to familiar Java/MySQL work, try it, inspect the result, review the diff, and commit. CFBD is the selected data source. Python 3.13 is the selected language; OpenAI `gpt-6-luna` with low reasoning effort is selected; live access and initial scoped evaluations have passed.
 
@@ -60,7 +60,7 @@ See the [checkpoint summary](checkpoint-summary.md) and [credential inventory/li
 - The importer passed all 14 offline tests plus real local MySQL loading, repeated-import ID/count stability, and controlled-failure rollback checks.
 - Docker Desktop and Compose run locally. MySQL 8.4.13 startup, administrator authentication, and loopback port binding were verified.
 - The four-table schema is applied. Representative unique-key, foreign-key, and CHECK tests passed; fixture rows were rolled back. Subsequent real imports loaded 15 teams, 14 games, and 28 statistics rows, with separate import-run history.
-- MCP account, locked view owner, and approved views are created; allowed view reads and denied private/base reads and writes passed. The import account has passed required write and denied-operation checks. Real imports and populated MCP view counts passed. MCP tools now pass real stdio discovery/call checks and all 35 offline tests pass. The research/writer workflow has produced a live sourced sample; scoped live missing-statistics and injected-text checks passed. See [security/failure checks](security-failure-checks.md). The two-agent briefing is required for the demo.
+- MCP account, locked view owner, and approved views are created; allowed view reads and denied private/base reads and writes passed. The import account has passed required write and denied-operation checks. Real imports and populated MCP view counts passed. MCP tools now pass real stdio discovery/call checks and all 41 offline tests pass. The research/writer workflow has produced a live sourced sample; scoped live missing-statistics and injected-text checks passed. See [security/failure checks](security-failure-checks.md). The two-agent briefing is required for the demo.
 
 See [database checks](local-database-checks.md), [importer walkthrough](importer-review.md), and [permissions](permissions.md) for evidence and remaining checks.
 
@@ -184,4 +184,16 @@ Work in small steps: explain the change → try it → inspect the result → re
 
 Add S3 for original-data archives, a managed database for infrastructure practice, scheduled ingestion, additional sources, a richer UI, or a security-investigation workflow. Keep these outside the initial two-week scope.
 
-The writer now accepts 1–6 cited claims, allowing a short briefing when statistics are unavailable. Citation-reference validation does not establish factual accuracy. Current verification: 35 offline tests plus the recorded live cases; the injection case is one observed attempt, not a general guarantee.
+The writer now accepts 1–6 cited claims, allowing a short briefing when statistics are unavailable. Citation-reference validation does not establish factual accuracy. Current verification: 41 offline tests plus the recorded live cases; the injection case is one observed attempt, not a general guarantee.
+
+## Local Web UI Checkpoint
+
+The Python-served UI is implemented on `feature/local-web-ui` without additional dependencies. It offers a game selector, optional live generation, saved sample, citations, limitations, and an expandable evidence panel. Model requests remain server-side; localhost, origin/token, request-shape, concurrent-work and attempt limits are enforced. The full suite passes 41 tests. Initial manual UI review and feedback are recorded; automated browser and systematic responsive/keyboard checks remain unverified. See [web UI](web-ui.md). The terminal fallback and post-demo VM plan are unchanged.
+
+The current UI adds a bounded search-style request field and a reviewed alias catalog for the 14 Texas 2023 opponents. Names are resolved locally to imported game IDs; CFBD remains the football-record source. Official university sources support alias configuration only. No runtime web tools or model-based alias inference were added. Ambiguous UW requests require clarification. See [UI functionality, feedback, future work and security](web-ui.md) and [alias provenance](team-aliases.md). UI changes remain on the separate feature branch; no merge is implied.
+
+The demo alias catalog now includes reviewed mascot/team nicknames for each imported opponent. Shared Cowboys/Pokes/Cougars labels require clarification; explicit school names or consistent game order can disambiguate. Washington State is retained only as a future Cougs/Cougars collision candidate. See [nickname sources and tests](team-aliases.md). No runtime web access or new agent permissions were added.
+
+## Review and Presenter Checkpoint
+
+Completed an interactive glass-to-metal pass through the live request path. The architecture review includes three Mermaid diagrams and component/code/guardrail mappings; the presenter outline is prepared, not yet fully rehearsed. Diagram semicolons were corrected after a user-reported parse error; automated Mermaid rendering remains unverified. Writer instructions now prefer 5–6 substantive claims covering more available statistics, while accepting 1–6 and preserving missing-data rules. One richer-output live evaluation matched retrieved evidence and passed the existing 41-test suite. Prior live injection/missing-stat evaluations predate this prompt revision. No permissions, schemas, tools or usage budgets changed.

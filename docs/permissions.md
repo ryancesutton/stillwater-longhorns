@@ -1,6 +1,6 @@
 # Permission Plan
 
-Status: local MCP database authorization is implemented and tested. `stillwater_mcp` can SELECT three approved views only. The locked `stillwater_view_owner` defines those views. The import identity is also created with its required writes and denied operations tested. The stdio MCP service is implemented and tested; agent/OS isolation remains pending. See the [MCP review](mcp-review.md). See [database checks](local-database-checks.md). Treat the new VM as unavailable until the project owner explicitly reports it ready.
+Status: local MCP database authorization is implemented and tested. `stillwater_mcp` can SELECT three approved views only. The locked `stillwater_view_owner` defines those views. The import identity is also created with its required writes and denied operations tested. The stdio MCP service is implemented and tested; runtime OS isolation remains deferred. See the [MCP review](mcp-review.md). See [database checks](local-database-checks.md). Treat the new VM as unavailable until the project owner explicitly reports it ready.
 
 ## Identities and Privileges
 
@@ -57,7 +57,7 @@ Run against harmless fixtures in the project database, with the actual intended 
 | Note contains an injected request for private data | Observe agent response separately; tool capabilities and database grants remain restricted |
 | Runtime attempts to read import/admin secret files | Denied by OS/container isolation once configured |
 
-Also test rollback on failed imports and missing-data responses. Agent refusal is a behavioral result; database denial is enforcement evidence. Neither substitutes for the other. All remote checks remain pending.
+Rollback and missing-data checks were subsequently tested; see [database checks](local-database-checks.md) and [security/failure checks](security-failure-checks.md). Agent refusal is a behavioral result; database denial is enforcement evidence. Neither substitutes for the other. All remote checks remain pending.
 
 ## Local MCP Account Details
 
@@ -74,3 +74,7 @@ Verification: `python scripts/check_mcp_permissions.py` connects via TCP inside 
 `stillwater_import`@`%` is implemented with SELECT, INSERT, UPDATE on exactly four tables: teams, games, team_game_stats, ingestion_runs. SHOW GRANTS confirms no broader grants or roles. The `%` client-host match has the same Docker-network limitation explained above; it is not a firewall rule. The separately generated credential is in `secrets/mysql-import-password`, ignored by Git with owner-only permissions.
 
 `db/import-grants.sql` documents the grants. One-time `scripts/setup_import_identity.py` refuses existing accounts or password files. `scripts/check_import_permissions.py` verified authentication and SELECT/INSERT/UPDATE on all four tables using transaction fixtures, followed by rollback. Private-table reads, DELETE, CREATE TABLE, and ALTER TABLE were denied with error 1142. The four dataset/run tables stayed empty and the private dummy record was unchanged. These checks used container-local TCP, not the host Python connector. Real archive loading and repeated upserts have now passed using the host Python connector. A controlled application failure also confirmed real transaction rollback; see the database-check report.
+
+## Local Browser Interface
+
+The new web process lists games using the existing bounded retrieval helper and MCP database identity, then invokes the existing orchestrator for generation. The browser receives public game evidence and a local request-verification token, never database or model credentials. Aliases are reviewed public configuration and grant no additional permissions. JavaScript selection checks do not replace server validation or database enforcement. No database identities/grants were changed for the UI. See [web UI](web-ui.md).

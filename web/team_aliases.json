@@ -1,0 +1,263 @@
+{
+  "version": 2,
+  "reviewed_on": "2026-11-01",
+  "scope": "Texas 2023 opponents; Ohio/Oregon State and Washington State retained as known ambiguity candidates, not imported records. Reviewed school and mascot/nickname aliases; not an exhaustive registry.",
+  "teams": [
+    {
+      "canonical_name": "Rice",
+      "aliases": [
+        "Rice University"
+      ],
+      "sources": [
+        "https://www.rice.edu/",
+        "https://riceowls.com/"
+      ],
+      "in_initial_dataset": true,
+      "mascot_aliases": [
+        "Owls"
+      ]
+    },
+    {
+      "canonical_name": "Alabama",
+      "aliases": [
+        "University of Alabama",
+        "Bama"
+      ],
+      "sources": [
+        "https://www.ua.edu/",
+        "https://rolltide.com/documents/download/2018/6/28/alabama-logos.pdf"
+      ],
+      "in_initial_dataset": true,
+      "mascot_aliases": [
+        "Crimson Tide",
+        "Tide"
+      ]
+    },
+    {
+      "canonical_name": "Wyoming",
+      "aliases": [
+        "University of Wyoming",
+        "UW"
+      ],
+      "sources": [
+        "https://www.uwyo.edu/",
+        "https://gowyo.com/news/2026/8/24/football-cowboys-enter-final-week-of-fall-camp"
+      ],
+      "in_initial_dataset": true,
+      "mascot_aliases": [
+        "Cowboys",
+        "Pokes"
+      ]
+    },
+    {
+      "canonical_name": "Baylor",
+      "aliases": [
+        "Baylor University"
+      ],
+      "sources": [
+        "https://www.baylor.edu/",
+        "https://baylorbears.com/"
+      ],
+      "in_initial_dataset": true,
+      "mascot_aliases": [
+        "Bears"
+      ]
+    },
+    {
+      "canonical_name": "Kansas",
+      "aliases": [
+        "University of Kansas",
+        "KU"
+      ],
+      "sources": [
+        "https://brand.ku.edu/guidelines/editorial/university-style-guide",
+        "https://kuathletics.com/"
+      ],
+      "in_initial_dataset": true,
+      "mascot_aliases": [
+        "Jayhawks"
+      ]
+    },
+    {
+      "canonical_name": "Oklahoma",
+      "aliases": [
+        "University of Oklahoma",
+        "OU"
+      ],
+      "sources": [
+        "https://www.ou.edu/",
+        "https://soonersports.com/"
+      ],
+      "in_initial_dataset": true,
+      "mascot_aliases": [
+        "Sooners"
+      ]
+    },
+    {
+      "canonical_name": "Houston",
+      "aliases": [
+        "University of Houston",
+        "UH"
+      ],
+      "sources": [
+        "https://www.uh.edu/",
+        "https://uhcougars.com/sports/2018/6/12/trads-hou-traditions-html"
+      ],
+      "in_initial_dataset": true,
+      "mascot_aliases": [
+        "Cougars",
+        "Coogs"
+      ]
+    },
+    {
+      "canonical_name": "BYU",
+      "aliases": [
+        "Brigham Young University",
+        "Brigham Young"
+      ],
+      "sources": [
+        "https://styleguide.byu.edu/brand-guidelines/byu-terms/",
+        "https://byucougars.com/soccer-cougs-in-the-pros"
+      ],
+      "in_initial_dataset": true,
+      "mascot_aliases": [
+        "Cougars",
+        "Cougs"
+      ]
+    },
+    {
+      "canonical_name": "Kansas State",
+      "aliases": [
+        "Kansas State University",
+        "K-State",
+        "K State"
+      ],
+      "sources": [
+        "https://www.k-state.edu/communications-marketing/brand-style/voice-style/style-guide/index.html",
+        "https://www.kstatesports.com/"
+      ],
+      "in_initial_dataset": true,
+      "mascot_aliases": [
+        "Wildcats"
+      ]
+    },
+    {
+      "canonical_name": "TCU",
+      "aliases": [
+        "Texas Christian University",
+        "Texas Christian"
+      ],
+      "sources": [
+        "https://www.tcu.edu/",
+        "https://gofrogs.com/"
+      ],
+      "in_initial_dataset": true,
+      "mascot_aliases": [
+        "Horned Frogs",
+        "Frogs"
+      ]
+    },
+    {
+      "canonical_name": "Iowa State",
+      "aliases": [
+        "Iowa State University",
+        "ISU"
+      ],
+      "sources": [
+        "https://www.iastate.edu/",
+        "https://financialaid.iastate.edu/tools-and-resources/faqs/",
+        "https://cyclones.com/"
+      ],
+      "in_initial_dataset": true,
+      "mascot_aliases": [
+        "Cyclones"
+      ]
+    },
+    {
+      "canonical_name": "Texas Tech",
+      "aliases": [
+        "Texas Tech University",
+        "TTU"
+      ],
+      "sources": [
+        "https://www.ttu.edu/",
+        "https://texastech.com/"
+      ],
+      "in_initial_dataset": true,
+      "mascot_aliases": [
+        "Red Raiders"
+      ]
+    },
+    {
+      "canonical_name": "Oklahoma State",
+      "aliases": [
+        "Oklahoma State University",
+        "OSU"
+      ],
+      "sources": [
+        "https://static.okstate.com/custompages/branding/",
+        "https://okstate.com/sports/2015/3/17/GEN_201401011?path=mbball"
+      ],
+      "in_initial_dataset": true,
+      "mascot_aliases": [
+        "Cowboys",
+        "Cowpokes",
+        "Pokes"
+      ]
+    },
+    {
+      "canonical_name": "Washington",
+      "aliases": [
+        "University of Washington",
+        "UW"
+      ],
+      "sources": [
+        "https://www.washington.edu/",
+        "https://gohuskies.com/"
+      ],
+      "in_initial_dataset": true,
+      "mascot_aliases": [
+        "Huskies"
+      ]
+    },
+    {
+      "canonical_name": "Ohio State",
+      "aliases": [
+        "Ohio State University",
+        "OSU"
+      ],
+      "sources": [
+        "https://www.osu.edu/"
+      ],
+      "in_initial_dataset": false,
+      "mascot_aliases": []
+    },
+    {
+      "canonical_name": "Oregon State",
+      "aliases": [
+        "Oregon State University",
+        "OSU"
+      ],
+      "sources": [
+        "https://oregonstate.edu/"
+      ],
+      "in_initial_dataset": false,
+      "mascot_aliases": []
+    },
+    {
+      "canonical_name": "Washington State",
+      "aliases": [
+        "Washington State University",
+        "WSU"
+      ],
+      "mascot_aliases": [
+        "Cougars",
+        "Cougs"
+      ],
+      "sources": [
+        "https://wsucougars.com/"
+      ],
+      "in_initial_dataset": false
+    }
+  ]
+}

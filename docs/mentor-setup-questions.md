@@ -1,21 +1,41 @@
-# VM Setup Questions for Mentor
+# VM Deployment Questions
 
-Draft message to send when the mentor responds; no message has been sent by Codex.
+The app currently runs locally: Python serves the browser interface and orchestrates model/MCP calls; MySQL 8.4 runs in Docker. App and database together on the new VM remain preferred. MySQL setup on that VM is already approved; VM readiness and the remaining deployment details are unconfirmed.
 
-> Thanks for helping with the VM. Has the new one been stood up yet? If it is ready, could you send the MagicDNS hostname and SSH access instructions through our usual private channel?
->
-> I’m planning to run the Python app and MySQL together. You’ve approved MySQL setup on the new VM; may I also install Python and dependencies, create a project directory and separate service users, and run the application? Would containers be permitted if needed? Will I have sudo access, or should I coordinate administrative changes with you?
->
-> Are there existing services, data, or credentials I should leave alone? Is outbound HTTPS to CollegeFootballData, the model API, and GitHub allowed? May I use VS Code Remote–SSH, which installs server components?
->
-> Is storage persistent, and who handles backups, recovery, cleanup, and any resource limits? Are there restrictions on publishing sanitized code and project documentation?
->
-> If the new VM isn’t available, would running the app on the original VM be permitted, and under what restrictions? Our current demo uses a terminal over SSH, so it doesn’t need a public website or inbound web port.
+## VM availability and access
 
-## Checks Once Access Is Available
+- Is the new VM ready, and which VM should I use for the application and database?
+- Will the VM be dedicated to this project or shared with other users/services?
+- What are its Linux distribution/version, CPU allocation, RAM, and available disk space?
+- Could you provide its Tailscale MagicDNS hostname and SSH access instructions through our usual private channel?
 
-- Inspect Linux distribution, CPU, RAM, and free disk with read-only commands.
-- Confirm which host is authorized and whether it is dedicated or shared.
-- Confirm MySQL version, installation method, database location, and isolation before setup. App and database together remain preferred; a split deployment requires a separately reviewed connection plan.
-- Keep credentials and private infrastructure details outside Git, prompts, and logs.
-- Treat the new VM as unavailable until the project owner explicitly reports readiness. Continue local development meanwhile.
+## Installation and isolation
+
+- May I run the Python app and MySQL together on the new VM, and do you prefer containers or native services?
+- May I install Python and dependencies, create the project directory, and configure the app to run as a service?
+- May I create separate OS users or appropriately isolated containers for the app/orchestrator, MCP server, and import/admin tasks so they do not share access to all credentials?
+- Will I have sudo access, or should I coordinate installations, service configuration, and permission changes with you?
+- Which existing services, data, directories, ports, or credentials must I leave untouched?
+- May I use VS Code Remote-SSH, which installs server components on the VM?
+
+## Network and browser access
+
+- Is outbound HTTPS allowed to CollegeFootballData, the OpenAI model API, and GitHub, plus the package registries needed to install dependencies?
+- For the initial browser UI, should we keep it on the VM's localhost and reach it through an SSH tunnel over Tailscale, or do you want direct tailnet access?
+- If direct tailnet access is preferred, who should have access, and what authentication, HTTPS/reverse-proxy, firewall, and Tailscale policy requirements should we follow?
+- Can MySQL remain private to the VM or container network, without publishing its database port to the tailnet or internet?
+
+## Operations and sharing
+
+- Will the project files, original import archives, database storage, and secret files persist across VM restarts or rebuilds, and where should they live?
+- Who should handle backups, restore testing, updates, and recovery, and are there existing tools or policies I should use?
+- What CPU, memory, storage, model-API spending, uptime, and cleanup limits should I plan around, and who owns any associated costs?
+- Are there restrictions on publishing sanitized project code, screenshots, architecture notes, or deployment documentation, including hostnames or infrastructure details?
+- If the new VM is delayed, is deployment to the original VM permitted, and what additional restrictions would apply there?
+
+## Once the answers are available
+
+- Confirm the authorized target and inspect its configuration with read-only commands before installing anything.
+- Agree on service identities, secret storage, network exposure, persistence, and recovery before deployment.
+- Keep credentials and private infrastructure details outside Git, prompts, and logs; use a private channel for access details.
+- Treat the new VM as unavailable until Ry confirms readiness. No remote deployment or message to the mentor has been performed by Codex.

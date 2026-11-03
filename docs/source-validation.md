@@ -40,9 +40,9 @@ The importer performed structural checks. Codex then compared the saved records 
 
 ## Decision and Remaining Work
 
-CFBD passes the initial schedule/results evaluation. The team-statistics evaluation and scope decision appear below. Next, finalize the initial schema for the selected core fields.
+CFBD passes the initial schedule/results evaluation. The team-statistics evaluation and scope decision appear below. The schema for the selected core fields was subsequently applied; see [database checks](local-database-checks.md).
 
-API authentication succeeded. Database authorization, repeatable MySQL imports, restricted MCP tools, and agent behavior have not yet been tested. No claim about those controls follows from this source validation.
+At this source-validation checkpoint, API authentication succeeded but database authorization, repeatable imports, MCP tools, and agent behavior had not yet been tested. Subsequent results are recorded in [database checks](local-database-checks.md) and [security/failure checks](security-failure-checks.md); no claim about those controls follows from source validation alone.
 
 ## Team Game Statistics Evaluation
 

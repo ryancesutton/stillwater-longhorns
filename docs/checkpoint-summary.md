@@ -1,5 +1,9 @@
 # Checkpoint: Local Data and Database Boundaries
 
+## Post-Demo Plan for Review
+
+See the [post-demo learning and security engineering plan](post-demo-learning-plan.md), prepared November 2, 2026. Proposed next step: targeted review, a one-page threat model, and a small denial test with Ry implementing the change. Initial consolidation estimate is 5–8 review hours plus 4–6 hands-on hours, adjusted by demonstrated understanding. Follow with process/credential isolation, web/API fundamentals, vulnerability management, detection and recovery; later introduce S3/IAM and web-assisted alias checks with explicit scope and permissions. Deployment remains conditional on VM answers. The plan is not yet implemented; older sections below retain historical demo checkpoints.
+
 ## Working Today
 
 The local workflow can retrieve CFBD data, preserve original responses and metadata, normalize Texas 2023 records, and load MySQL using a restricted import identity. The database contains 15 teams, 14 games, and 28 team-game statistics rows. MySQL 8.4.13 runs in Docker with persistent storage and its host port bound only to `127.0.0.1:3307`.
@@ -25,7 +29,7 @@ MCP database access is restricted to three views. Its own authenticated queries 
 
 ## Evidence and Limits
 
-All 35 offline tests now pass; dependency consistency and whitespace checks passed. Live MySQL checks are recorded in [local-database-checks.md](local-database-checks.md). This is not a complete security audit or dependency vulnerability scan. Network-loss recovery remains simulated, and schema constraints were sampled rather than exhaustively tested.
+All 41 offline tests now pass; dependency consistency and whitespace checks passed. Live MySQL checks are recorded in [local-database-checks.md](local-database-checks.md). This is not a complete security audit or dependency vulnerability scan. Network-loss recovery remains simulated, and schema constraints were sampled rather than exhaustively tested.
 
 Source accuracy checks cover the schedule and selected box-score fields, not every statistic. Return statistics are excluded after a documented discrepancy. Credentials are private plaintext files accessible to the host user; OS isolation and secret recovery are not implemented/tested. See [credential inventory](credentials.md).
 
@@ -35,6 +39,20 @@ Bounded MCP tools and the sequential research → writer workflow are implemente
 
 OpenAI `gpt-6-luna` with low reasoning effort is selected and live account access is verified. The November 1 evaluation used 16 requests and 29,567 reported tokens across four runs, including two stopped missing-stat runs. These observations do not prove general factual accuracy or injection resistance.
 
-Next build a basic React UI on a separate branch, retaining the terminal fallback. Estimate 2–4 focused hours for a basic version, subject to findings. Rehearse closer to the Monday afternoon local presentation; VM deployment remains deferred.
+The initial Python-served web UI is implemented on `feature/local-web-ui`, retaining the terminal fallback. See [web UI](web-ui.md) for startup, boundaries, and remaining browser review. Rehearse closer to the Monday afternoon local presentation; VM deployment remains deferred.
 
 Use [learning-review.md](learning-review.md) for periodic whole-project checks. Continue explaining security changes before implementation and pointing to their code. Review both permitted and denied cases, and use short recall questions to check understanding.
+
+UI follow-up: Ry approved the initial appearance. Longhorns replaced visible Stillwater branding; scrolling now occurs on generation/results or saved-sample actions, not dropdown selection. Bounded query parsing supports season game order and opponent names, now including sourced aliases with ambiguity handling. No new dependencies, database grants, model tools, or runtime web access were added. See [UI review history and security](web-ui.md) and [alias research](team-aliases.md). Ry has since reported testing generated briefings and approved richer output; automated browser and systematic responsive/keyboard verification remain unverified.
+
+The demo search now supports sourced mascot/team-nickname variants, with 102 query checks plus an input-order assertion passing. Cowboys/Pokes/Cougars remain ambiguous in the actual imported season. Cougs and Coogs are distinct reviewed spellings; broader coverage requires collision review. Python suite remains 41 tests. See [UI behavior](web-ui.md) and [alias sources](team-aliases.md).
+
+Ry has approved the current UI feature set as sufficient for the demo. Refresh now starts at the top; selecting a game stays in place. The intensive live-path review is complete; a presenter outline and three Mermaid diagrams are prepared. Next is abbreviated review and rehearsal. Keep feature scope fixed while preparing the presentation. UI work is on `feature/local-web-ui`; main retains the previous terminal checkpoint until an explicit merge.
+
+## Latest Checkpoint
+
+The writer now prefers broader use of supplied statistics across 5–6 claims, without changing the 1–6 validator, tool access, grants, schema or usage budgets. A live Alabama evaluation produced five claims whose figures matched the retrieved evidence, using four requests and 8,684 reported tokens. The 41-test suite passed after the prompt revision. Earlier live injection and missing-stat fixtures were not rerun for this revision. Ry reported the output improved.
+
+The [glass-to-metal review](glass-to-metal-review.md) and [demo outline](demo-outline.md) are prepared. Repeat a short walkthrough, then rehearse near the presentation. Same-user secret-file access, no public/user-authenticated deployment, sampled factual evaluation, and no hard dollar cap remain explicit limits. Main has not been merged with the UI feature branch.
+
+Subsequent abbreviated review and guided verbal rehearsal are complete. The [study script](demo-study-script.md) compiles suggested wording from each segment; a continuous timed/browser rehearsal remains separate. Post-demo priorities clarified by Ry: VM deployment with environment-specific security work, then exploring live web-assisted alias checks. Runtime aliases remain static; no remote actions or new model/web capabilities were implemented. Further features remain deferred.
