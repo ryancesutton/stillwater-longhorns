@@ -1,5 +1,7 @@
 # Reviewed Opponent Aliases
 
+> Historical local implementation/demo evidence. November 18 status: review and initial threat modeling are complete; split-VM deployment is planned, not verified. See the [current checkpoint](checkpoint-summary.md) and [deployment runbook](deployment-runbook.md). No new test results are implied by this documentation update.
+
 Reviewed November 1, 2026 using official university/athletics pages. Runtime map: [team_aliases.json](../web/team_aliases.json). These are search labels, not new football records or replacements for CFBD identifiers. Source URLs are provenance for a maintained configuration file; the app does not fetch them.
 
 Canonical CFBD names are always accepted. Additional accepted forms:

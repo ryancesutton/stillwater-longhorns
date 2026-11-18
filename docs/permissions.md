@@ -1,6 +1,10 @@
 # Permission Plan
 
-Status: local MCP database authorization is implemented and tested. `stillwater_mcp` can SELECT three approved views only. The locked `stillwater_view_owner` defines those views. The import identity is also created with its required writes and denied operations tested. The stdio MCP service is implemented and tested; runtime OS isolation remains deferred. See the [MCP review](mcp-review.md). See [database checks](local-database-checks.md). Treat the new VM as unavailable until the project owner explicitly reports it ready.
+## Current checkpoint — November 18, 2026
+
+The working local web/terminal version is on `main`; demo preparation is complete. Guided review and an initial [deployment threat model](deployment-threat-model.md) are complete. Both VMs are ready: app/orchestrator and MCP are planned for Smaug, MySQL for Rivendell. Smaug already serves the separate static site, which must be preserved. The owner authorized installation/service configuration, and Ry confirmed unrestricted sudo on both hosts. VM deployment, runtime secret isolation, remote database restrictions, and backup restoration are **not yet implemented or verified**. See the [deployment runbook](deployment-runbook.md) for current gates; earlier dated demo notes below are historical.
+
+Status: local MCP database authorization is implemented and tested. `stillwater_mcp` can SELECT three approved views only. The locked `stillwater_view_owner` defines those views. The import identity is also created with its required writes and denied operations tested. The stdio MCP service is implemented and tested; runtime OS isolation remains deferred. See the [MCP review](mcp-review.md). See [database checks](local-database-checks.md). Ry has confirmed both VMs ready and sudo privileges on each.
 
 ## Identities and Privileges
 
@@ -39,7 +43,7 @@ Keep private configuration outside Git and logs. On the VM, use distinct OS iden
 
 Current local implementation: MySQL 8.4.13 in Docker publishes only `127.0.0.1:3307` to the Mac, using a separate persistent volume. The old host installation is untouched. The administrator password is a private ignored file mounted as a Compose secret; it is not an encrypted vault. MCP credentials are generated into an owner-only ignored file. Import credentials are stored separately in an owner-only ignored file; OS isolation remains pending.
 
-Future VM plan: keep MySQL bound to VM loopback or a private container network without a public database port. Access the terminal application through SSH over Tailscale; MagicDNS resolves the host name and does not grant database privileges. Use local MCP transport initially. No remote configuration is authorized by this document alone.
+Future VM plan: MySQL on Rivendell must accept only the intended private app-host path from Smaug, with network restrictions and database grants verified separately. The final listener/tunnel mechanism is not configured. Access the terminal application through SSH over Tailscale; MagicDNS resolves the host name and does not grant database privileges. Use local MCP transport initially. No remote configuration is authorized by this document alone.
 
 ## Enforcement Checklist
 

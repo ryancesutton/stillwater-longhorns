@@ -1,5 +1,9 @@
 # Glass-to-Metal Architecture Review
 
+## Current checkpoint — November 18, 2026
+
+The working local web/terminal version is on `main`; demo preparation is complete. Guided review and an initial [deployment threat model](deployment-threat-model.md) are complete. Both VMs are ready: app/orchestrator and MCP are planned for Smaug, MySQL for Rivendell. Smaug already serves the separate static site, which must be preserved. The owner authorized installation/service configuration, and Ry confirmed unrestricted sudo on both hosts. VM deployment, runtime secret isolation, remote database restrictions, and backup restoration are **not yet implemented or verified**. See the [deployment runbook](deployment-runbook.md) for current gates; earlier dated demo notes below are historical.
+
 For the shorter presentation cues, use the [demo presenter outline](demo-outline.md). This document is the deeper review and diagram reference.
 
 Trace one Texas–Alabama briefing, CFBD game `401520183`, from the browser to stored records and back. Start the demonstration with the finished briefing, then explain the path that produced it. Data ingestion is a separate preparation path, not part of each generation.

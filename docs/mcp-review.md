@@ -1,5 +1,9 @@
 # MCP Retrieval Checkpoint
 
+## Current checkpoint — November 18, 2026
+
+The working local web/terminal version is on `main`; demo preparation is complete. Guided review and an initial [deployment threat model](deployment-threat-model.md) are complete. Both VMs are ready: app/orchestrator and MCP are planned for Smaug, MySQL for Rivendell. Smaug already serves the separate static site, which must be preserved. The owner authorized installation/service configuration, and Ry confirmed unrestricted sudo on both hosts. VM deployment, runtime secret isolation, remote database restrictions, and backup restoration are **not yet implemented or verified**. See the [deployment runbook](deployment-runbook.md) for current gates; earlier dated demo notes below are historical.
+
 Implemented two tools with the official MCP Python SDK 2.3.0. The server runs over local stdio: its parent process exchanges protocol messages over stdin/stdout, without an HTTP listener. No model API is called in this step.
 
 ## Code and Guardrails

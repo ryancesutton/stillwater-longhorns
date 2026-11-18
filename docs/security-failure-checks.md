@@ -1,5 +1,7 @@
 # Security and Failure Checks
 
+> Historical local implementation/demo evidence. November 18 status: review and initial threat modeling are complete; split-VM deployment is planned, not verified. See the [current checkpoint](checkpoint-summary.md) and [deployment runbook](deployment-runbook.md). No new test results are implied by this documentation update.
+
 Checkpoint: November 1, 2026. All 35 unit tests passed after the sparse-data fix below. The fake-model → real stdio MCP → local MySQL → fake-writer integration check also passed with local network access before that fix. The initial offline checkpoint made no paid API requests; the later live evaluation is recorded below. Unit fixtures do not modify the database.
 
 ## Missing-data cases

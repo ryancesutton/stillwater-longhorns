@@ -1,5 +1,9 @@
 # Local Credential Inventory and Lifecycle
 
+## Current checkpoint — November 18, 2026
+
+The working local web/terminal version is on `main`; demo preparation is complete. Guided review and an initial [deployment threat model](deployment-threat-model.md) are complete. Both VMs are ready: app/orchestrator and MCP are planned for Smaug, MySQL for Rivendell. Smaug already serves the separate static site, which must be preserved. The owner authorized installation/service configuration, and Ry confirmed unrestricted sudo on both hosts. VM deployment, runtime secret isolation, remote database restrictions, and backup restoration are **not yet implemented or verified**. See the [deployment runbook](deployment-runbook.md) for current gates; earlier dated demo notes below are historical.
+
 No secret values belong in this document. Paths below are relative to the repository root.
 
 | Identity | Credential file | Intended consumer |

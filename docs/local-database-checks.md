@@ -1,5 +1,7 @@
 # Local Schema Checkpoint
 
+> Historical local implementation/demo evidence. November 18 status: review and initial threat modeling are complete; split-VM deployment is planned, not verified. See the [current checkpoint](checkpoint-summary.md) and [deployment runbook](deployment-runbook.md). No new test results are implied by this documentation update.
+
 The reviewed four-table schema was applied to the previously empty `stillwater` database on local Docker MySQL 8.4.13. The authenticated setup session used `root@localhost`. No changes were made to the older host MySQL installation.
 
 Verified tables: `ingestion_runs`, `teams`, `games`, and `team_game_stats`, all InnoDB. Primary keys, unique keys, foreign keys, and CHECK constraints were inspected in `information_schema`.

@@ -1,5 +1,7 @@
 # Model Integration Review
 
+> Historical local implementation/demo evidence. November 18 status: review and initial threat modeling are complete; split-VM deployment is planned, not verified. See the [current checkpoint](checkpoint-summary.md) and [deployment runbook](deployment-runbook.md). No new test results are implied by this documentation update.
+
 Selected starting configuration: OpenAI `gpt-6-luna`, reasoning effort `low`, via the Responses API. Official [model documentation](https://developers.openai.com/api/docs/models/gpt-6-luna) lists low effort, function calling and structured output. API access is verified. A live sample and scoped missing-statistics/injected-text evaluations have passed; see the recorded results below.
 
 ## Security Summary

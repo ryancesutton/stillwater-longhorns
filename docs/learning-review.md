@@ -1,5 +1,9 @@
 # Periodic Knowledge Checks
 
+## Current checkpoint — November 18, 2026
+
+The working local web/terminal version is on `main`; demo preparation is complete. Guided review and an initial [deployment threat model](deployment-threat-model.md) are complete. Both VMs are ready: app/orchestrator and MCP are planned for Smaug, MySQL for Rivendell. Smaug already serves the separate static site, which must be preserved. The owner authorized installation/service configuration, and Ry confirmed unrestricted sudo on both hosts. VM deployment, runtime secret isolation, remote database restrictions, and backup restoration are **not yet implemented or verified**. See the [deployment runbook](deployment-runbook.md) for current gates; earlier dated demo notes below are historical.
+
 Use this as a standing learning plan for future project sessions. Start with one short recall question; use 3–5 questions at major checkpoints. Ask one at a time, wait for an answer, and explain corrections using the relevant code. Looking at code/docs is encouraged. Prefer project architecture, implementation and security over unrelated protocol details.
 
 ## Topics to Rotate Across the Whole Project
@@ -72,3 +76,9 @@ The writer now requests broader use of available statistics; this changes output
 Completed another one-question-at-a-time pass and guided verbal rehearsal. Suggested phrasing is compiled in [demo-study-script.md](demo-study-script.md). Continue refining citation linkage versus approved source identity, SELECT grants versus view definitions, and repeated research API turns versus local MCP calls. Ry identified same-user secret access as the main OS-isolation limitation; remember that MySQL itself is already containerized, and containerization must be configured to provide the intended isolation.
 
 Ry's post-demo priority is VM deployment and its security review, then exploration of live web-assisted alias checks, with further features deferred. This does not enable runtime web access or establish VM readiness. A continuous timed/browser rehearsal remains unverified.
+
+## November 18 — Guided Review and Threat Modeling
+
+Ry independently explained request flow, restricted grants, rollback, upserts (term idempotent needed recall), missing versus zero, provenance, generation abuse, aggregate budgets, timeout/retry costs, and compromised trusted machines. Reinforce agent roles versus OS/database identities, attribution, injection versus SQL parameterization, attack entry prerequisites versus downstream containment, and sanitized versus raw errors.
+
+Use normal operation → possible abuse → control → observable test. Supply candidate attack mechanisms before assessing unfamiliar system knowledge. Proposed exercise: fake credential + intercepted HTTP transport; verify authentication header only, no prompt/body/log leakage, including error paths. Not implemented yet. See the [initial threat register](deployment-threat-model.md).

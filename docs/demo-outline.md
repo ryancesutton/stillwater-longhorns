@@ -1,5 +1,7 @@
 # Demo Presenter Outline
 
+> Historical local implementation/demo evidence. November 18 status: review and initial threat modeling are complete; split-VM deployment is planned, not verified. See the [current checkpoint](checkpoint-summary.md) and [deployment runbook](deployment-runbook.md). No new test results are implied by this documentation update.
+
 For suggested full phrasing compiled during rehearsal, see the [study script](demo-study-script.md). Keep this outline as the shorter presentation aid.
 
 Target: a brief product demonstration followed by roughly 3–4 minutes of explanation. These are cues, not a speech. Follow Texas–Alabama throughout. Live generation time varies; do not promise a fixed response time.

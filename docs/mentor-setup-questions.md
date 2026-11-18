@@ -1,15 +1,17 @@
-# VM Deployment: Five Questions
+# VM Deployment — Mentor Answers and Remaining Checks
 
-The app works locally. For the first VM deployment, I propose running the Python app and MySQL together, keeping MySQL private, and accessing the browser UI through an SSH tunnel over Tailscale.
+## Confirmed by owner / Ry
 
-- **Which VM should I use, and is it ready?** Please send its MagicDNS hostname and SSH access instructions through our usual private channel.
-- **What am I allowed to install and configure?** Can I install Python/dependencies and Docker, run the app and MySQL, and create separate service users or containers? Will I have sudo access, or should I coordinate those changes with you?
-- **Is the VM dedicated or shared, and what must I leave untouched?** Any existing services, data, directories, or ports to avoid?
-- **Is the proposed network setup okay?** Browser access through an SSH tunnel over Tailscale, MySQL private to the VM/container network, and outbound HTTPS to OpenAI, CollegeFootballData, GitHub, and package registries.
-- **Where should persistent project/database data live, and is it backed up?** Any storage limits or cleanup expectations I should know about?
+- **Hosts and access:** Smaug and Rivendell are available to Ry, using SSH user `ry`. Ry confirmed unrestricted sudo on both.
+- **Installation/configuration:** owner permits Python/dependencies, Docker, service accounts/containers, and project service configuration on these isolated VMs.
+- **Existing workloads:** owner allocated both VMs to Ry. Since then, the separate static site has been deployed to Smaug; preserve it.
+- **Network approach:** owner approved Tailscale/SSH, private MySQL access and outbound HTTPS to source/model/GitHub/package services. Actual policy/connectivity must still be verified.
+- **Storage:** inspect available capacity; the answer did not establish backup coverage, persistence across rebuilds, or recovery procedures.
 
-## Details we can resolve as we go
+## Current deployment decision
 
-After access is confirmed, inspect the OS, CPU, RAM, disk, and existing configuration with read-only commands. Work out service configuration, credential isolation, backup/restore procedures, and maintenance within the permissions granted above. Ask separately before installing optional VS Code Remote-SSH server components, expanding network exposure, or publishing private infrastructure details.
+App/orchestrator and MCP on Smaug; MySQL on Rivendell. Browser access initially through an SSH tunnel. Separate runtime identities/secret access are planned; no remote configuration has been applied by this project yet. Owner approval is not proof of a particular existing firewall or service configuration.
 
-The new VM remains unavailable until Ry confirms readiness. MySQL setup on that VM was previously approved; other changes still depend on the agreed scope. Keep credentials outside Git, prompts, and logs.
+Rivendell output supplied by Ry: Ubuntu 24.04.5 LTS, 3.8 GiB RAM (3.4 GiB then available), 55 GiB then free disk. Refresh capacity and inspect Smaug before installation. These are non-AWS VMs on the owner's PC; S3/account permissions remain separate future questions.
+
+Use the [deployment runbook](deployment-runbook.md) and [threat model](deployment-threat-model.md). Keep passwords, keys, private addresses and connection details outside public documentation, prompts and logs. No further owner confirmation is needed for the already authorized setup; inspect technical constraints and coordinate if requirements expand.

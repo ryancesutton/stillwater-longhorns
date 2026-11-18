@@ -6,9 +6,11 @@ This is the first project in **Project Stillwater**, a collection of hands-on pr
 
 ## Status
 
+**November 18:** the working local web/terminal version is on `main`. Guided review and the [initial threat model](docs/deployment-threat-model.md) are complete. Next is staged deployment: app/MCP on Smaug alongside the existing static site, MySQL on Rivendell. Owner permission and sudo are confirmed; remote configuration, runtime isolation, and backups remain unverified. See the [deployment runbook](docs/deployment-runbook.md).
+
 **Local data preparation and database schema are working.** CFBD source checks and offline normalization passed. MySQL 8.4.13 runs in Docker locally, with the four-table schema applied and representative database constraints verified. Real imports now contain 15 teams, 14 games, and 28 team-game statistics rows; repeated imports retained counts and IDs, and a controlled-failure rollback restored the dataset.
 
-The importer has passed offline tests and local MySQL integration. The two bounded MCP tools are implemented and verified over stdio; the research/writer workflow has produced a verified live sample and passed the scoped missing-statistics and injected-text evaluations. The import identity has passed required write and denied-operation checks. MCP read-only views/grants are implemented and their allowed/denied checks passed, including populated view counts after import. The two-agent briefing is required for the Monday afternoon demo. See [local database checks](docs/local-database-checks.md) and the [importer review](docs/importer-review.md).
+The importer has passed offline tests and local MySQL integration. The two bounded MCP tools are implemented and verified over stdio; the research/writer workflow has produced a verified live sample and passed the scoped missing-statistics and injected-text evaluations. The import identity has passed required write and denied-operation checks. MCP read-only views/grants are implemented and their allowed/denied checks passed, including populated view counts after import. The two-agent briefing and recorded demo are complete. See [local database checks](docs/local-database-checks.md) and the [importer review](docs/importer-review.md).
 
 ## Project Goal
 
@@ -24,28 +26,30 @@ Exact dataset coverage will depend on source availability, permitted use, and im
 
 Version one uses CFBD as its single historical data source and a fixed sequential workflow. Live ingestion, a dashboard, S3, Athena, RDS, arbitrary SQL or shell tools, and infrastructure-changing agents are deferred. Reduce data coverage before expanding scope.
 
-## Planned Architecture
+## Local Architecture and Planned Deployment
 
 ```mermaid
 flowchart TD
     Source[CollegeFootballData API] --> Import[Import process]
     Import --> Raw[Original import files]
     Import --> DB[MySQL]
-    User[Terminal request] --> Orchestrator[Workflow orchestrator]
+    User[Browser or terminal request] --> Orchestrator[Workflow orchestrator]
     Orchestrator --> Research[Research agent]
     Orchestrator --> API[External model API]
-    Research --> MCP[Restricted MCP tools]
+    Research -->|Tool proposal| Orchestrator
+    Orchestrator -->|Validated dispatch| MCP[Restricted MCP tools]
     MCP --> DB
-    Research --> Writer[Writer agent]
+    MCP -->|Evidence| Orchestrator
+    Orchestrator -->|Selected evidence| Writer[Writer agent]
     Writer --> Briefing[Briefing with source references]
     Orchestrator --> Logs[Audit logs]
     MCP --> Logs
 ```
 
-The Monday afternoon demo will run locally on the developer’s Mac. MySQL is the selected database: the current instance is MySQL 8.4.13 in Docker, with persistent storage in the Compose `mysql_data` volume and a published port restricted to `127.0.0.1:3307`. Local Python code will connect through that port. The older host MySQL 5.7 installation is untouched.
+The demo ran locally on the developer’s Mac. MySQL is the selected database: the current instance is MySQL 8.4.13 in Docker, with persistent storage in the Compose `mysql_data` volume and a published port restricted to `127.0.0.1:3307`. Local Python code will connect through that port. The older host MySQL 5.7 installation is untouched.
 
-After the demo, deployment is planned to the friend’s Linux VMs, with the app and MySQL together on the new VM as the preferred arrangement. VM availability, capacity, final topology, and permissions for application installs remain unconfirmed. MySQL setup on the new VM is authorized. Remote access is planned through Tailscale/SSH with MagicDNS; no remote setup has occurred. OpenAI `gpt-6-luna` with low reasoning effort is selected; live API access is verified.
-The planned research agent will retrieve structured evidence through `list_games` and `get_game_data`. The writer will receive that evidence and its source references without database or retrieval-tool access. The orchestrator will control the handoff, timeouts, and usage limits.
+Deployment is planned across the friend’s two Linux VMs: app/MCP on Smaug and MySQL on Rivendell. Both are ready and setup is authorized; Smaug’s existing static site must be preserved. Remote access uses Tailscale/SSH. No deployment changes have occurred; capacity, network controls, and recovery must be inspected. OpenAI `gpt-6-luna` with low reasoning effort is selected; live API access is verified.
+The research agent retrieves structured evidence through `list_games` and `get_game_data`. The writer receives that evidence and its source references without database or retrieval-tool access. The orchestrator controls the handoff, timeouts, and usage limits.
 
 ## Data Plan
 
@@ -58,10 +62,10 @@ Keep original imports in a private local directory excluded from Git. Link norma
 ## Security Approach
 
 - Separate database identities for administration, ingestion, and retrieval.
-- Give the planned MCP database identity read-only access to individually approved views.
+- Give the MCP database identity read-only access to individually approved views.
 - Keep database credentials out of agent inputs and outputs; keep import and administrator credentials unavailable to the agent runtime.
 - Expose bounded, parameterized retrieval tools rather than arbitrary SQL.
-- Keep MySQL accessible only within the host or private container network.
+- Keep local MySQL loopback-only; for the two-VM deployment, restrict the private database path to the intended app host and verify database authentication/grants independently.
 - Exclude credentials, private configuration, and sensitive logs from Git.
 - Treat retrieved notes as untrusted data.
 - Record sanitized audit events, errors, timing, and model usage without exposing secrets in prompts or logs.

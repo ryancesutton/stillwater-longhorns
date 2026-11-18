@@ -1,5 +1,7 @@
 # Offline Importer Review
 
+> Historical local implementation/demo evidence. November 18 status: review and initial threat modeling are complete; split-VM deployment is planned, not verified. See the [current checkpoint](checkpoint-summary.md) and [deployment runbook](deployment-runbook.md). No new test results are implied by this documentation update.
+
 Status: local MySQL integration tested using `stillwater_import`. The CLI defaults to dry-run; `--write` explicitly enables local loading. `requirements.txt` pins MySQL Connector/Python 26.10.0. `scripts/local_db.py` reads only the private import credential, connects to `127.0.0.1:3307`, checks the account/server identity, disables autocommit and LOCAL INFILE, and sets connection/read/write timeouts.
 
 ## Walk Through the Code

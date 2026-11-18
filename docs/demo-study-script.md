@@ -1,5 +1,7 @@
 # Demo Study Script
 
+> Historical local implementation/demo evidence. November 18 status: review and initial threat modeling are complete; split-VM deployment is planned, not verified. See the [current checkpoint](checkpoint-summary.md) and [deployment runbook](deployment-runbook.md). No new test results are implied by this documentation update.
+
 Compiled from the suggested wording during Ry's rehearsal. Study the sequence and ideas; use the shorter [presenter outline](demo-outline.md) during the demonstration. These paragraphs are suggested phrasing, not a memorization requirement.
 
 ## 1. Opening and purpose

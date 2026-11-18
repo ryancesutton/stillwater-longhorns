@@ -1,5 +1,15 @@
 # Checkpoint: Local Data and Database Boundaries
 
+## November 18: Current Deployment and Learning Checkpoint
+
+Guided review is complete; the [initial deployment threat model](deployment-threat-model.md) covers six scenarios, current/proposed controls and verification gaps. Mentor feedback prioritizes identity security for agents alongside agentic security. Use normal operation → possible abuse → control → test; introduce unfamiliar system mechanisms before knowledge checks.
+
+Both VMs are available and owner-authorized for installation/configuration. Ry confirmed unrestricted sudo on Smaug and Rivendell. The plan is app/MCP on Smaug and MySQL on Rivendell; Smaug's separate static site is already live and must be preserved. Rivendell specs were supplied by Ry; current Smaug configuration, network policies, runtime isolation and backup/recovery are not yet inspected or verified. Direct SSH inspection from this session stopped at short-hostname resolution; no remote command or configuration change occurred.
+
+Follow the [staged deployment runbook](deployment-runbook.md). The MCP container/service mechanism and restricted launch authority must be selected after inspection. The web game-list currently accesses the DB directly, so isolating the DB credential requires adapting that path too. Runtime code is still local-only; no deployment is complete. Email/password registration with optional Google sign-in is future work, not implemented. S3 and live alias lookup remain deferred behind identity/agentic security and deployment verification.
+
+Older demo checkpoints below are historical; they do not override this section. Existing PDF summaries remain snapshots of their preparation date.
+
 ## Working Version on Main
 
 The working web UI and terminal fallback have been merged into `main`. Future improvements should branch from this checkpoint. Mentor handoff PDFs are preserved in `output/pdf/`; the condensed learning-plan PDF is also saved to Ry’s Desktop. Earlier branch-status and rehearsal notes below describe historical checkpoints.

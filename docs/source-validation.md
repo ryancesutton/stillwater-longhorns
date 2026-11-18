@@ -1,5 +1,7 @@
 # CFBD Source Validation
 
+> Historical local implementation/demo evidence. November 18 status: review and initial threat modeling are complete; split-VM deployment is planned, not verified. See the [current checkpoint](checkpoint-summary.md) and [deployment runbook](deployment-runbook.md). No new test results are implied by this documentation update.
+
 ## Scope and Evidence
 
 Initial sample: Texas’s 2023 schedule and results, including postseason, fetched using `scripts/fetch_games.py`. Team-statistics validation is recorded below. MySQL imports have not been validated yet.

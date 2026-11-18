@@ -1,6 +1,16 @@
 # Post-Demo Learning and Security Engineering Plan
 
-Prepared November 2, 2026 for Ry to review. This is a proposed next-phase plan, not a record of completed controls or authorization for remote/cloud changes. Refine it when the mentor clarifies the potential team's duties and VM setup.
+Prepared November 2, 2026 for Ry to review. This is a proposed next-phase plan, not a record of completed controls or authorization for remote/cloud changes. Updated November 18: the mentor specifically prioritizes agentic identity security. VM setup is authorized and readiness confirmed; see the current deployment checkpoint below.
+
+## Current Sequence and Learning Focus
+
+Guided review is complete and the [initial threat model](deployment-threat-model.md) is drafted. Next: read-only VM inspection → identity/secret/network design → staged deployment → positive/negative checks → deeper identity and agentic-security exercises. Smaug hosts app/MCP alongside the existing static site; Rivendell hosts MySQL. Deployment is planned, not implemented.
+
+Pair concepts and current primary-source industry context with applied learning: authentication/authorization, human versus workload identities, delegation, credential lifecycle and attribution; separately cover prompt injection, tool misuse, evidence/output checks and resource limits. Roles do not automatically create security identities. Explain unfamiliar OS/network/web mechanisms before asking Ry to invent attack paths.
+
+When implementing MCP container isolation, point out image contents, runtime user, credential-only mounts, stdio wiring, network limits and launch authority. Do not assume Docker socket/group access is a narrow privilege. Verify allowed DB reads and denied access to other dummy secrets independently.
+
+Email/password registration with Google sign-in as an alternative is planned for after initial deployment/security work; provider/framework, account linking, sessions and recovery are not selected or implemented. S3 and web-assisted aliases remain later work behind the identity/agentic focus.
 
 ## Objective
 
@@ -69,9 +79,7 @@ Keep these distinctions explicit:
 
 ## Deployment Decision Point
 
-If VM answers arrive, use [mentor setup questions](mentor-setup-questions.md) to confirm the authorized host, resources, installation permissions, identity isolation, networking, browser access, persistence and recovery before changes. The new VM remains unavailable until Ry confirms readiness. App and MySQL together remain preferred; final topology is unconfirmed.
-
-If answers do not arrive, continue local review, threat modeling, disposable tests, dependency investigation and recovery planning. Do not treat the delay as permission to use the original VM or another account.
+VM answers and readiness are confirmed: see [mentor answers](mentor-setup-questions.md). Follow the [deployment runbook](deployment-runbook.md) for the split Smaug/Rivendell plan. Inspect resources, existing services, identity isolation, networking and recovery before applying changes. Preserve the local fallback and Smaug static site.
 
 ## Later Extension A: Private S3 Import Archives
 

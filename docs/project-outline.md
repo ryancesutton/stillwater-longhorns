@@ -1,5 +1,9 @@
 # Project Stillwater / Game Day: Two-Week Outline
 
+## Current checkpoint — November 18, 2026
+
+The working local web/terminal version is on `main`; demo preparation is complete. Guided review and an initial [deployment threat model](deployment-threat-model.md) are complete. Both VMs are ready: app/orchestrator and MCP are planned for Smaug, MySQL for Rivendell. Smaug already serves the separate static site, which must be preserved. The owner authorized installation/service configuration, and Ry confirmed unrestricted sudo on both hosts. VM deployment, runtime secret isolation, remote database restrictions, and backup restoration are **not yet implemented or verified**. See the [deployment runbook](deployment-runbook.md) for current gates; earlier dated demo notes below are historical.
+
 ## Goal
 
 Build a Texas Longhorns briefing app while refreshing software engineering skills and learning data ingestion, relational modeling, MCP, agent orchestration, and security. Project Stillwater is the working umbrella name for the workforce-readiness effort.
@@ -9,9 +13,9 @@ Use a data-first approach: ingest historical data from CollegeFootballData (CFBD
 ## Scope and Architectural Decisions
 
 - Run the Monday afternoon demo locally on the Mac. MySQL is selected and currently runs as MySQL 8.4.13 in Docker; the Python application will run locally.
-- Deploy to the friend’s Linux VMs after the demo, preferring app and MySQL together on the new VM. The new VM is unavailable until the project owner reports otherwise. MySQL installation there is authorized; final topology, capacity, access, and other installation permissions remain pending. Existing SSH access is to the original VM, not proof that the new VM is ready. These are not EC2 instances.
+- Deploy app/MCP on Smaug and MySQL on Rivendell; both are ready and setup is authorized. Preserve the static site already running on Smaug. Inspect existing services and network configuration before changes. These are not EC2 instances.
 - Use MySQL as the primary datastore. S3, Athena, RDS, and cross-account AWS access are deferred.
-- Retain the terminal workflow as a fallback; review the small Python-served web UI on its separate branch before rehearsal. Use a fixed research → writing workflow.
+- Retain the terminal fallback; the Python-served web UI is merged into main. Use a fixed research → writing workflow.
 - Preserve original imports in a private local directory; store normalized records and source metadata in MySQL.
 - Use CollegeFootballData (CFBD) as the single data source with a few bounded MCP tools. Defer live updates, scraping, a dashboard, and infrastructure-changing agents.
 - Use VS Code for reading, editing, debugging, and reviewing changes; use its local terminal for Git, imports, and verification. Remote–SSH is deferred unless the VM becomes the deployment target and installation permission is confirmed.
@@ -26,9 +30,11 @@ flowchart TD
     IM --> DB[Local Docker MySQL 8.4.13: data and provenance]
     U[You: terminal request] --> O[Orchestrator on Mac]
     O --> R[Research agent]
-    R --> M[Restricted MCP retrieval service]
+    R -->|Tool proposal| O
+    O -->|Validated dispatch| M[Restricted MCP retrieval service]
     M --> DB
-    R --> W[Writer agent]
+    M -->|Evidence| O
+    O -->|Selected evidence| W[Writer agent]
     W --> B[Saved briefing with evidence references]
     O --> API[Model API]
     O --> L[Audit log]
@@ -41,9 +47,9 @@ The orchestrator invokes research and writing sequentially. The research agent r
 
 ## Next Three Implementation Steps
 
-1. Repeat an abbreviated glass-to-metal walkthrough, focusing on model proposals versus application execution, evidence handoff, and independent permissions. See [architecture review](glass-to-metal-review.md).
-2. Rehearse the short product demo and [presenter outline](demo-outline.md), including the labeled saved-sample fallback and remaining factual/security limits.
-3. Keep the working feature branch stable for Monday afternoon; VM deployment, stronger OS isolation and broader evaluations remain post-demo work.
+1. Inspect both VMs read-only and preserve Smaug’s static-site services, files and ports.
+2. Turn the [threat model](deployment-threat-model.md) into explicit identity, secret-access and network boundaries.
+3. Deploy in stages with permitted/denied checks, rollback and recovery verification; use the [runbook](deployment-runbook.md).
 
 For each step, explain the concept and its connection to familiar Java/MySQL work, try it, inspect the result, review the diff, and commit. CFBD is the selected data source. Python 3.13 is the selected language; OpenAI `gpt-6-luna` with low reasoning effort is selected; live access and initial scoped evaluations have passed.
 
@@ -93,7 +99,7 @@ The [permission matrix](permissions.md) records local MCP grants and passed auth
 | Research agent | Approved MCP retrieval tools; no SQL, shell, or database credentials |
 | Writer agent | Research findings and references; no retrieval or database tools |
 
-Bind MySQL to loopback when services run directly on the host. If containers are used, keep it on a private container network with no public database port. Do not expose MySQL to the internet or tailnet for this initial version.
+Bind MySQL to loopback when services run directly on the host. If containers are used, keep it on a private container network with no public database port. For the local version, no tailnet database listener exists. The planned split deployment requires an explicitly restricted Tailscale database path; no public database listener is planned.
 
 Database users enforce data privileges, but co-located processes still share host-level risks. Keep the import credentials and administrator credentials unavailable to the agent runtime; separate operating-system users or containers where practical. Document the remaining limitations of one-host isolation.
 
@@ -139,7 +145,7 @@ Planning estimate remains approximately 20–30 focused hours, subject to source
 
 ## Deferred VM Hosting Questions
 
-These questions do not block the local demo. Revisit them for post-demo VM deployment. Original-VM SSH access is confirmed; new-VM readiness is not. MySQL setup on the new VM is authorized, while other installs and final deployment details remain unconfirmed.
+These questions do not block the local demo. Revisit them for post-demo VM deployment. Both VMs are ready and installation/configuration is authorized. The [mentor answers](mentor-setup-questions.md) supersede these original questions; resources, actual restrictions and recovery still require inspection.
 
 1. Is the VM dedicated to my sandbox or shared? What packages, containers, services, and VS Code Remote–SSH components may I install?
    - Purpose: establish the permitted implementation and avoid affecting other workloads.
