@@ -104,3 +104,12 @@ Installed the two pinned direct dependencies from `requirements.txt` using binar
 Still pending: administrator-controlled final code/venv installation under `/opt/longhorns`, service-account execution and systemd sandbox tests, protected credential configuration, game-list path adaptation and remote DB setup. Do not relocate a virtual environment by copying it: recreate it at its final path using the reviewed dependency manifest because its launch scripts can contain absolute paths.
 
 Ubuntu's package-install output reported a pending kernel reboot and deferred service restarts. Schedule maintenance separately and verify SSH/Tailscale/static-site recovery afterward; no reboot was performed in this step.
+
+
+## November 21 — Administrator install prepared (execution pending)
+
+`deploy/install-smaug-mcp.sh` and its explicit code/unit/dependency payload are staged in Ry's private `~/longhorns-setup/mcp-install` directory on Smaug. Locked binary wheels are downloaded; no sudo installation has run yet. The script refuses an existing deployment directory or existing units, recreates the venv at its final path, installs wheels offline as the MCP user, then makes code/environment root-owned and non-writable to runtime users. No real credentials are included.
+
+After review, Ry runs `sudo bash ~/longhorns-setup/mcp-install/install-smaug-mcp.sh`. It validates unit definitions, enables only the local socket, and runs `check_managed_mcp.py` as the app user. That check performs real discovery, rejects an unknown tool without querying MySQL, and reads active process metadata to verify the MCP UID, no-new-privileges and zero effective capabilities. An ordinary `ry` socket connection must be denied. If post-activation checks fail, the installer disables the new socket and leaves artifacts for deliberate inspection; it does not remove or overwrite an existing installation. Rollback is disabling the socket; no static-site files or configuration are changed.
+
+This configuration check does not establish database connectivity, production readiness or complete sandbox security. DB credentials/settings and real service secret tests remain pending. The full app is not deployed. Runbook result must be updated from actual installer output before claiming the service is active.
