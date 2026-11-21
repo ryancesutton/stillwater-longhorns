@@ -1,0 +1,14 @@
+[Unit]
+Description=Local-only MCP connection boundary
+
+[Socket]
+ListenStream=/run/longhorns-mcp.sock
+SocketUser=root
+SocketGroup=longhorns_app
+SocketMode=0660
+Accept=yes
+MaxConnections=4
+RemoveOnStop=yes
+
+[Install]
+WantedBy=sockets.target

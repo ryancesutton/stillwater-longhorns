@@ -1,6 +1,6 @@
 # Staged VM Deployment Runbook
 
-Current status: November 18, 2026. Planning/checkpoint only; no deployment changes applied. The local working app remains the fallback. Owner permission and Ry's sudo capability on Smaug and Rivendell are confirmed.
+Current status: November 18, 2026. Initial read-only inspection completed; no application/database deployment changes applied. Ry installed a dedicated SSH public key on both hosts and key-based access from this session succeeded. The local working app remains the fallback. Owner permission and Ry's sudo capability on Smaug and Rivendell are confirmed.
 
 ## Target and gates
 
@@ -18,7 +18,19 @@ Do not copy the entire local secrets directory to either runtime. Generate deplo
 
 Use verified SSH destinations and known host keys; do not disable host-key validation. Record sanitized conclusions, not private connection details. Inspect OS/architecture, CPU/RAM/disk, service users, running services, listening ports, Docker/container/runtime availability, Tailscale state and existing firewall rules. Refresh Rivendell capacity. Inventory Smaug's working static site before choosing directories/ports. Avoid raw service environment/configuration dumps that could contain secrets.
 
-Initial direct SSH attempts from this Codex session could not resolve `smaug` or `rivendell`. This is not evidence of a VM outage; exact resolvable destinations or access through Ry's existing SSH session are needed. No authentication or remote command ran during those attempts.
+Initial short-name resolution and password-only authentication problems were resolved using full MagicDNS destinations and a dedicated Ed25519 key installed by Ry. Do not publish private destination details or key material.
+
+Observed inventory:
+
+| Host | OS / Python | CPU | Available memory / disk at inspection | Existing workload |
+|---|---|---|---|---|
+| Smaug | Ubuntu 24.04.5 / Python 3.12.3 | 4 logical CPUs | 7.2 GiB / 94 GiB | `linrei-review.service` user service, Python process owned by `ry`, listener on Tailscale interface port 8181 |
+| Rivendell | Ubuntu 24.04.5 / Python 3.12.3 | 2 logical CPUs | 3.4 GiB / 55 GiB | No application/database listener observed |
+
+Neither host has Docker or Podman on the inspected PATH; both have subordinate-user mappings including `ry`. No swap was configured. Current application compatibility with Python 3.12 is unverified; local development used 3.13. Inspection did not establish firewall/tailnet policy, backups or persistence across rebuilds.
+
+`sudo -n true` requires a password on both hosts. This does not contradict Ry's unrestricted sudo authorization: the SSH key authenticates login, but does not supply sudo authentication. Keep passwords out of chat and automation arguments. Prepare explicit administrator bootstrap commands for Ry to execute in his terminal; do not enable blanket passwordless sudo for the app or automation.
+
 
 ## 2. Explain and choose isolation before implementation
 
@@ -52,3 +64,43 @@ Begin in preview/offline mode with no paid calls. Verify static-site health, SSH
 Choose persistent storage, backup ownership/retention, and restore procedure; backup coverage is currently unconfirmed. Restore into a disposable database and check counts/relationships/provenance. Record rollback steps before service/network changes. Document credential revocation/rotation and existing-session handling. Keep aggregate usage controls, human authentication and audit attribution gaps explicit; planned controls do not count as protection.
 
 Update the [threat register](deployment-threat-model.md) with observed likelihood/impact rationale, test evidence, owner and residual-risk decision. Teach each step as concept → configuration/code → permitted/denied verification, identifying identity-security and agentic-security controls separately.
+
+## November 21 — Service identity exercise
+
+Ry ran `deploy/create-smaug-service-users.sh` on November 18. Read-only inspection on November 21 confirmed `longhorns_app` and `longhorns_mcp` exist with distinct UIDs/groups and `/usr/sbin/nologin`; Ry's execution output showed both passwords locked. The existing static-site user service remains active. Runtime processes, containers and real secret isolation are not configured yet.
+
+Prepared and uploaded `deploy/check-service-isolation.sh`; syntax checked locally. Ry executed it on Smaug and supplied output on November 21: all six actual-read checks passed (each service could read its own dummy file; cross-service reads and ordinary `ry` reads were denied). The script reported cleanup on exit; cleanup was not independently inspected. Run with sudo after review. It creates root-controlled temporary directories and service-owned mode-600 dummy files, tests actual permitted/denied reads under each identity (including ordinary `ry`), then cleans up. No real secrets or persistent service configuration are changed. Root/sudo can bypass this ordinary-user boundary; these checks do not prove container, network or full runtime isolation.
+
+## November 21 — Separate MCP runtime: prepared, not installed
+
+Chosen first implementation: a systemd-managed service under `longhorns_mcp`, reached through a permission-controlled Unix socket. This replaces the earlier container proposal for the first isolation milestone; no container runtime is required. Containers remain optional later defense in depth. See [systemd socket activation](https://www.freedesktop.org/software/systemd/man/latest/systemd.socket.html) and [execution settings](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html).
+
+Prepared files:
+
+- `deploy/systemd/longhorns-mcp.socket`: local `/run` socket, root-owned, group `longhorns_app`, mode 0660; bounded concurrent connections. No TCP listener.
+- `deploy/systemd/longhorns-mcp@.service`: per-connection process under `longhorns_mcp`, stdin/stdout connected to socket, diagnostics separate; no new privileges/capabilities, read-only system view, private temporary files, bounded memory/tasks/lifetime.
+- `scripts/mcp_socket_bridge.py`: unprivileged stdio byte relay. It does not read secrets, execute model-selected commands, or change users. The connect attempt is bounded; idle socket waits rely on the enclosing client/workflow deadlines rather than timing out during an intervening model request.
+- `briefing.mcp_server_parameters()`: default local development behavior retained; explicitly setting `STILLWATER_MCP_SOCKET` selects the relay. A configured unavailable socket fails rather than falling back to a same-user MCP subprocess.
+
+These unit files are templates for the planned `/opt/longhorns` deployment. They have not been installed, started or verified with Ubuntu's systemd. Dependencies, protected code/secret locations, remote DB settings, web game-list routing, and Linux service-level positive/negative tests remain to do. Unix-socket access permits the approved retrieval protocol, not service configuration or arbitrary process launches; root still controls service definitions.
+
+Local verification: a real MCP server communicated through the Unix-socket relay, discovered exactly the two approved tools, and rejected an unregistered SQL tool without accessing the DB. All 43 Python tests and the existing JavaScript search checks passed during this milestone. This tests transport/protocol behavior, not Linux UID enforcement. No paid requests or DB calls were made by the new transport tests.
+
+### Alternative retained: containerized MCP
+
+Containerization remains an explicitly retained alternative to the first systemd-service implementation. A future comparison should evaluate rootless execution or administrator-managed containers, minimal code/dependency images, credential-only mounts, network restrictions, resource limits, and positive/negative access tests. The app must not receive unrestricted rootful Docker/socket access. Container launch authority and host file mappings require review; a container is not automatically a separate secret boundary. No container runtime or image has been installed for this project.
+
+### Connection vocabulary
+
+A Unix-domain socket is a local inter-process communication endpoint addressed by a filesystem path. Its ownership/mode controls which ordinary users may connect; it is not a regular file storing MCP messages and has no TCP port. The adapter (`mcp_socket_bridge.py`) translates the connection mechanism: it relays the client's stdio bytes to/from the socket without changing the MCP protocol or granting a different identity. systemd starts the receiving MCP process under its configured service identity. Administrator/root access remains privileged.
+
+
+## November 21 — Linux Python/MCP staging verified
+
+Ry installed Ubuntu's `python3-venv` support on Smaug. A private staging environment now exists at `~/longhorns-setup/runtime-check/.venv`, owned by administrative user `ry`; it is not the final service runtime and is inaccessible beneath the private setup directory to the service accounts.
+
+Installed the two pinned direct dependencies from `requirements.txt` using binary wheels only. `pip check` passed. Real MCP discovery through the Unix socket relay and rejection of an unregistered tool passed on Python 3.12.3/Linux; two transport/configuration tests passed. No DB queries, model API calls or real credentials were involved. The existing static-site service remained active. Preserved resolved dependency versions in `deploy/requirements-linux.lock`; this is a compatibility snapshot, not a vulnerability audit or hash-verified supply-chain guarantee.
+
+Still pending: administrator-controlled final code/venv installation under `/opt/longhorns`, service-account execution and systemd sandbox tests, protected credential configuration, game-list path adaptation and remote DB setup. Do not relocate a virtual environment by copying it: recreate it at its final path using the reviewed dependency manifest because its launch scripts can contain absolute paths.
+
+Ubuntu's package-install output reported a pending kernel reboot and deferred service restarts. Schedule maintenance separately and verify SSH/Tailscale/static-site recovery afterward; no reboot was performed in this step.

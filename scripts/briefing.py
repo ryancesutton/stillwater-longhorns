@@ -245,10 +245,22 @@ async def run_workflow(request, model, tools, audit):
             "model_calls": budget.calls, "reported_tokens": budget.tokens}
 
 
+def mcp_server_parameters():
+    """Local development child or an unprivileged relay to managed MCP."""
+    socket_path = os.environ.get("STILLWATER_MCP_SOCKET")
+    if socket_path is not None:
+        if not socket_path.startswith("/") or "\x00" in socket_path:
+            raise WorkflowError("MCP socket path must be absolute.")
+        args = [str(ROOT / "scripts/mcp_socket_bridge.py"), socket_path]
+    else:
+        args = [str(ROOT / "scripts/mcp_server.py")]
+    return StdioServerParameters(command=sys.executable, args=args,
+                                 cwd=ROOT, env=minimal_mcp_environment())
+
+
 async def live(request, audit):
     model = ResponsesModel()
-    params = StdioServerParameters(command=sys.executable, args=[str(ROOT / "scripts/mcp_server.py")],
-                                   cwd=ROOT, env=minimal_mcp_environment())
+    params = mcp_server_parameters()
     async with Client(params, read_timeout_seconds=20) as tools:
         discovered = await tools.list_tools()
         if {tool.name for tool in discovered.tools} != ALLOWED_TOOLS:

@@ -1,0 +1,24 @@
+[Unit]
+Description=Read-only MCP session under its own service identity
+
+[Service]
+User=longhorns_mcp
+Group=longhorns_mcp
+WorkingDirectory=/opt/longhorns
+ExecStart=/opt/longhorns/.venv/bin/python /opt/longhorns/scripts/mcp_server.py
+StandardInput=socket
+StandardOutput=inherit
+StandardError=journal
+Environment=PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1
+UMask=0077
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+CapabilityBoundingSet=
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+MemoryMax=256M
+TasksMax=32
+RuntimeMaxSec=180

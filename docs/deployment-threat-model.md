@@ -50,3 +50,10 @@ Assess current risk separately from residual risk after a control is implemented
 ## Learning checkpoint
 
 Ry independently identified credential value, excessive generation, aggregate-budget risk, timeout/retry spending, and compromised trusted-client risk. Reinforce prompt injection versus SQL injection, attack entry prerequisites versus downstream containment, OS identities versus agent roles, and safe error logging. Foundational lessons should explain normal system behavior and candidate attack paths before asking Ry to assess unfamiliar mechanisms.
+
+## November 21 — Initial OS identity boundary verification
+
+Distinct `longhorns_app` and `longhorns_mcp` service accounts exist on Smaug. Ry executed the dummy-file isolation exercise and supplied six passing checks: each identity read its own file, while cross-service reads and ordinary `ry` reads failed. This is evidence for Linux file-access separation on those temporary fixtures, not yet for deployed runtime/container isolation or protection of real credentials. Administrative root/sudo retains access. See the [runbook](deployment-runbook.md) and `deploy/check-service-isolation.sh`.
+
+
+Runtime design update: the first implementation will use a separately managed systemd MCP service and permission-controlled Unix socket, rather than a container launcher. Service templates and an unprivileged relay are prepared and locally protocol-tested; no unit is installed. This avoids granting the app sudo/rootful Docker launch authority. Linux runtime enforcement, secret configuration and web game-list routing remain pending; see the runbook.
