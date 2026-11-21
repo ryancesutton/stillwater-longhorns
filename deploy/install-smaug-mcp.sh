@@ -2,7 +2,16 @@
 # One-time MCP runtime installation; no database/model credentials are installed.
 # Run from the uploaded mcp-install directory after reviewing this script.
 set -euo pipefail
-[[ ${EUID} -eq 0 ]] || { echo 'Run with sudo after review.' >&2; exit 1; }
+preflight_only=false
+case "${1:-}" in
+    --check) preflight_only=true ;;
+    "") ;;
+    *) echo 'Usage: install-smaug-mcp.sh [--check]' >&2; exit 1 ;;
+esac
+if [[ ${EUID} -ne 0 && $preflight_only != true ]]; then
+    echo 'Run with sudo after review.' >&2
+    exit 1
+fi
 payload_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 target=/opt/longhorns
 # Service users cannot traverse the private upload directory; use a neutral cwd.
@@ -12,8 +21,14 @@ for account in longhorns_app longhorns_mcp; do
     [[ $(id -u "$account") -ne 0 ]]
 done
 for unit in longhorns-mcp.socket longhorns-mcp@.service; do
-    [[ $(systemctl show --property=LoadState --value "$unit") == not-found ]] || {
-        echo "Unit $unit already exists; stop and inspect." >&2; exit 1;
+    # systemctl show needs a concrete instance, not a bare @.service template.
+    probe=${unit/@.service/@preflight.service}
+    if ! load_state=$(systemctl show --property=LoadState --value "$probe"); then
+        echo "Could not inspect $unit; stop before installation." >&2
+        exit 1
+    fi
+    [[ $load_state == not-found ]] || {
+        echo "Unit $unit already exists (state: $load_state); stop and inspect." >&2; exit 1;
     }
     [[ -f "$payload_dir/systemd/$unit" ]]
 done
@@ -22,6 +37,10 @@ for filename in mcp_server.py game_tools.py local_db.py mcp_socket_bridge.py che
 done
 [[ -f "$payload_dir/requirements-linux.lock" ]]
 compgen -G "$payload_dir/wheels/*.whl" >/dev/null
+if [[ $preflight_only == true ]]; then
+    echo 'PASS: deployment path unused, units absent, accounts and payload present; no changes made.'
+    exit 0
+fi
 
 # No blanket sudo/Docker privileges are granted to either service user.
 install -d -o root -g root -m 755 "$target" "$target/scripts" "$target/wheels"
