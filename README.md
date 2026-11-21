@@ -6,7 +6,7 @@ This is the first project in **Project Stillwater**, a collection of hands-on pr
 
 ## Status
 
-**November 18:** the working local web/terminal version is on `main`. Guided review and the [initial threat model](docs/deployment-threat-model.md) are complete. Next is staged deployment: app/MCP on Smaug alongside the existing static site, MySQL on Rivendell. Owner permission and sudo are confirmed; remote configuration, runtime isolation, and backups remain unverified. See the [deployment runbook](docs/deployment-runbook.md).
+**November 21:** local web/terminal version remains on `main`; deployment work is on `feature/vm-deployment`. Smaug's systemd-managed MCP runtime passed actual process-identity, protocol and socket-denial checks; code/dependencies are root-owned. The static-site service remains active. MySQL on Rivendell, protected credentials, private DB connectivity and full web-app deployment are still pending. See the [deployment runbook](docs/deployment-runbook.md) and [threat model](docs/deployment-threat-model.md).
 
 **Local data preparation and database schema are working.** CFBD source checks and offline normalization passed. MySQL 8.4.13 runs in Docker locally, with the four-table schema applied and representative database constraints verified. Real imports now contain 15 teams, 14 games, and 28 team-game statistics rows; repeated imports retained counts and IDs, and a controlled-failure rollback restored the dataset.
 

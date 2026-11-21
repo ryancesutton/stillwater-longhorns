@@ -1,6 +1,18 @@
 # Checkpoint: Local Data and Database Boundaries
 
-## November 18: Current Deployment and Learning Checkpoint
+## November 21: Current Deployment Checkpoint
+
+Completed the first real OS/runtime identity boundary on Smaug: separate locked non-login service accounts, six dummy-secret access checks, Linux/Python staging tests, then administrator-owned MCP code/venv and a systemd-managed local socket. The installed service passed real two-tool discovery, unknown-tool rejection, actual `longhorns_mcp` UID/no-new-privileges/zero-effective-capabilities verification, and denial of ordinary `ry` socket access. Socket enabled/active and static-site service active were independently confirmed over SSH. No paid calls or real credentials were involved.
+
+The first installer attempt stopped before changes due to an invalid template-unit preflight query; corrected, tested read-only and retried successfully. Details, result limits and rollback are in the [deployment runbook](deployment-runbook.md). Full local regression at the transport milestone: 43 Python tests plus existing JavaScript search checks; Linux transport/configuration tests: two passed. No new full-suite run was needed for this documentation-only closeout.
+
+Next: MySQL on Rivendell, private connection controls and deployment-specific credential access; route web game-list retrieval through MCP before claiming the app has no database credential. Full app deployment, real secret isolation, recovery and human login remain pending. Containerization remains an alternative to the current separate service. Do not rerun the one-time installer on the installed target.
+
+Learning focus: OS identity versus agent role, venv versus permissions, root ownership versus root execution, sockets/adapters, rootful Docker authority, and independent behavioral/enforcement evidence. Session preference: one main concept with practical evidence and short recap, around 3–4 sessions/week, 60–90 minutes as available, targeting a tentative mid-February 2027 interview. Mentor priorities remain identity/agentic security and human-to-agent substitution across software delivery. See [learning review](learning-review.md).
+
+Older entries below are historical and superseded where they describe unready VMs or unimplemented MCP runtime isolation.
+
+## November 18: Historical Deployment and Learning Checkpoint
 
 Guided review is complete; the [initial deployment threat model](deployment-threat-model.md) covers six scenarios, current/proposed controls and verification gaps. Mentor feedback prioritizes identity security for agents alongside agentic security. Use normal operation → possible abuse → control → test; introduce unfamiliar system mechanisms before knowledge checks.
 

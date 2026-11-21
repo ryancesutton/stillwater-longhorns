@@ -1,8 +1,10 @@
 # Periodic Knowledge Checks
 
-## Current checkpoint — November 18, 2026
+## Current checkpoint — November 21, 2026
 
-The working local web/terminal version is on `main`; demo preparation is complete. Guided review and an initial [deployment threat model](deployment-threat-model.md) are complete. Both VMs are ready: app/orchestrator and MCP are planned for Smaug, MySQL for Rivendell. Smaug already serves the separate static site, which must be preserved. The owner authorized installation/service configuration, and Ry confirmed unrestricted sudo on both hosts. VM deployment, runtime secret isolation, remote database restrictions, and backup restoration are **not yet implemented or verified**. See the [deployment runbook](deployment-runbook.md) for current gates; earlier dated demo notes below are historical.
+The local web/terminal version remains on `main`; deployment work is on `feature/vm-deployment`. Smaug now has separate app/MCP OS accounts, six passing dummy-file access checks, and a systemd-managed MCP socket/service. Real discovery, unknown-tool rejection and actual MCP UID/no-new-privileges/capability checks passed; ordinary `ry` socket access was denied. Root-owned code and dependencies are installed. The static-site service remained active.
+
+The first isolation implementation uses a permission-controlled Unix socket and unprivileged stdio adapter; containerization remains a documented alternative. No real DB/model credentials or remote DB connectivity are configured, and the web app is not deployed. Next: MySQL on Rivendell, restricted connectivity/secret configuration, and adapting the web game-list path to use isolated MCP. Backups/recovery and end-to-end secret isolation remain unverified. See the [deployment runbook](deployment-runbook.md) and [threat model](deployment-threat-model.md). Earlier dated local/demo notes below are historical.
 
 Use this as a standing learning plan for future project sessions. Start with one short recall question; use 3–5 questions at major checkpoints. Ask one at a time, wait for an answer, and explain corrections using the relevant code. Looking at code/docs is encouraged. Prefer project architecture, implementation and security over unrelated protocol details.
 
@@ -82,3 +84,14 @@ Ry's post-demo priority is VM deployment and its security review, then explorati
 Ry independently explained request flow, restricted grants, rollback, upserts (term idempotent needed recall), missing versus zero, provenance, generation abuse, aggregate budgets, timeout/retry costs, and compromised trusted machines. Reinforce agent roles versus OS/database identities, attribution, injection versus SQL parameterization, attack entry prerequisites versus downstream containment, and sanitized versus raw errors.
 
 Use normal operation → possible abuse → control → observable test. Supply candidate attack mechanisms before assessing unfamiliar system knowledge. Proposed exercise: fake credential + intercepted HTTP transport; verify authentication header only, no prompt/body/log leakage, including error paths. Not implemented yet. See the [initial threat register](deployment-threat-model.md).
+
+
+## November 21 — OS Runtime Isolation and AI-Assisted Review
+
+- Ry correctly explained same-owner access and that systemd, not the relay, establishes MCP's identity. Explained UID/GID, process versus code file, Unix sockets, stdio adapter, rootful daemon authority, and root ownership versus runtime execution. Revisit with short scenarios; do not equate introduced terms with independent implementation mastery.
+- Behavioral guidance may fail while validation/authorization successfully deny harm. Usage-limit failure requires exceeding the budget, not merely repeated denied requests within it.
+- Review AI-generated changes by authority and consequence: what changed, what can it access/execute, what can leave, how is failure detected/reversed? Inspect privileged commands, credential flows, authorization, listeners, persistence and dependencies first. Model agreement is not independent proof; verify actual OS/DB/network outcomes.
+- Keep changes small enough for Ry to understand sensitive authority before executing them. Explain unfamiliar mechanisms before asking attack-path questions. Avoid a firehose of new terminology.
+- Mentor exercise: at requirements/coding/review/testing/deployment/operations stages, replace a human with an agent conceptually; identify delegated authority, untrusted inputs, independent approval/enforcement, attribution, containment and recovery. Do not let an agent approve its own consequential changes by default.
+- Tentative interview target mid-February 2027. Agreed cadence roughly 3–4 sessions/week, generally 60–90 minutes, adjusted to work/family. Start with available time and build/review/interview intent; end with recap and next step. No hiring/readiness guarantee. S3/new features remain secondary to identity and agentic fundamentals.
+- Next recall: who selects MCP's UID; why socket access does not confer its identity; why root-owned code does not execute as root; what the current deployment checks do and do not establish.

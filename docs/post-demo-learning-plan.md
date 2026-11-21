@@ -2,6 +2,12 @@
 
 Prepared November 2, 2026 for Ry to review. This is a proposed next-phase plan, not a record of completed controls or authorization for remote/cloud changes. Updated November 18: the mentor specifically prioritizes agentic identity security. VM setup is authorized and readiness confirmed; see the current deployment checkpoint below.
 
+## November 21 Progress and Cadence
+
+First managed MCP runtime is installed on Smaug and identity/socket checks passed; real credentials, Rivendell MySQL and full app remain pending. Use the [current checkpoint](checkpoint-summary.md) rather than interpreting original phase estimates as remaining work. Current mechanism is a separate systemd service; containerization remains an alternative, not a requirement already implemented.
+
+Tentative interview target: mid-February 2027. Aim for 3–4 sessions/week, typically 60–90 minutes as available, with one main concept, applied evidence, and a short recap. Use late November/December for deployment and foundations, January for identity/agentic exercises, and early February for scenario practice and weak areas. Adjust with mentor feedback; estimates do not guarantee readiness. Introduce new Linux/network mechanisms gradually and revisit glossary terms through exercises.
+
 ## Current Sequence and Learning Focus
 
 Guided review is complete and the [initial threat model](deployment-threat-model.md) is drafted. Next: read-only VM inspection → identity/secret/network design → staged deployment → positive/negative checks → deeper identity and agentic-security exercises. Smaug hosts app/MCP alongside the existing static site; Rivendell hosts MySQL. Deployment is planned, not implemented.

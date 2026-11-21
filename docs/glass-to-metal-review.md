@@ -1,8 +1,10 @@
 # Glass-to-Metal Architecture Review
 
-## Current checkpoint — November 18, 2026
+## Current checkpoint — November 21, 2026
 
-The working local web/terminal version is on `main`; demo preparation is complete. Guided review and an initial [deployment threat model](deployment-threat-model.md) are complete. Both VMs are ready: app/orchestrator and MCP are planned for Smaug, MySQL for Rivendell. Smaug already serves the separate static site, which must be preserved. The owner authorized installation/service configuration, and Ry confirmed unrestricted sudo on both hosts. VM deployment, runtime secret isolation, remote database restrictions, and backup restoration are **not yet implemented or verified**. See the [deployment runbook](deployment-runbook.md) for current gates; earlier dated demo notes below are historical.
+The local web/terminal version remains on `main`; deployment work is on `feature/vm-deployment`. Smaug now has separate app/MCP OS accounts, six passing dummy-file access checks, and a systemd-managed MCP socket/service. Real discovery, unknown-tool rejection and actual MCP UID/no-new-privileges/capability checks passed; ordinary `ry` socket access was denied. Root-owned code and dependencies are installed. The static-site service remained active.
+
+The first isolation implementation uses a permission-controlled Unix socket and unprivileged stdio adapter; containerization remains a documented alternative. No real DB/model credentials or remote DB connectivity are configured, and the web app is not deployed. Next: MySQL on Rivendell, restricted connectivity/secret configuration, and adapting the web game-list path to use isolated MCP. Backups/recovery and end-to-end secret isolation remain unverified. See the [deployment runbook](deployment-runbook.md) and [threat model](deployment-threat-model.md). Earlier dated local/demo notes below are historical.
 
 For the shorter presentation cues, use the [demo presenter outline](demo-outline.md). This document is the deeper review and diagram reference.
 

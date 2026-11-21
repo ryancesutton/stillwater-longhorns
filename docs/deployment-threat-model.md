@@ -57,3 +57,6 @@ Distinct `longhorns_app` and `longhorns_mcp` service accounts exist on Smaug. Ry
 
 
 Runtime design update: the first implementation will use a separately managed systemd MCP service and permission-controlled Unix socket, rather than a container launcher. Service templates and an unprivileged relay are prepared and locally protocol-tested; no unit is installed. This avoids granting the app sudo/rootful Docker launch authority. Linux runtime enforcement, secret configuration and web game-list routing remain pending; see the runbook.
+
+
+November 21 installation result: Ry's corrected installer run passed real systemd MCP discovery, unknown-tool rejection, actual process UID/no-new-privileges/effective-capability checks, and denial of ordinary `ry` socket access. Root-owned code/venv and a root-owned socket restricted to the app group are installed. This advances OS/runtime isolation evidence for T1, but real secret placement and database/network restrictions remain unconfigured. The app's direct game-list DB path still needs adaptation; do not claim end-to-end secret isolation yet.

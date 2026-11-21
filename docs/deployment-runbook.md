@@ -116,3 +116,10 @@ This configuration check does not establish database connectivity, production re
 
 
 Installer correction: the first execution stopped during preflight because querying a bare `@.service` template with `systemctl show` is invalid. Its error was incorrectly interpreted as an existing unit. Inspection confirmed `/opt/longhorns` was absent and no MCP units were installed; the static site remained active. Corrected the query to use a concrete probe instance and distinguish query failures from existing units. Added `--check` read-only mode; it passed on Smaug after the fix. A fresh sudo installation attempt is safe from the confirmed untouched preflight state; no cleanup or deletion was needed.
+
+
+## November 21 — Managed MCP installed and identity checks passed
+
+Ry executed the corrected installer successfully. Dependencies installed offline and `pip check` passed. The socket was enabled for boot and activated. Actual managed MCP discovery returned exactly the two approved tools; an unregistered SQL tool was rejected without DB access. Active-process metadata confirmed the `longhorns_mcp` UID, no-new-privileges enabled and zero effective capabilities. Ordinary `ry` socket access was denied. The socket is root-owned, group `longhorns_app`, mode 0660; final code and venv directories are root-owned, mode 0755. MCP starts per permitted connection rather than remaining continuously running when idle.
+
+A pip cache warning during consistency checking reflects the service user's unavailable/non-writable cache directory; `pip check` completed successfully. No runtime write permission was added to silence it. No database credentials or live model access are configured. Next: protected credential/configuration design, Rivendell MySQL setup and private connection controls, then route web game-list retrieval through the isolated MCP boundary. The full app is not yet deployed.
